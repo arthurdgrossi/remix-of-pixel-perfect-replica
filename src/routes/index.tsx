@@ -12,7 +12,6 @@ import {
   Mail,
 } from "lucide-react";
 import heroImage from "@/assets/hero.jpg";
-import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -576,5 +575,3 @@ function Footer() {
   );
 }
 
-// Button import kept available for future variants
-void Button;
