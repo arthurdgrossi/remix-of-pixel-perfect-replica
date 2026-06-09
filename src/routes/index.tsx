@@ -563,16 +563,20 @@ function Governance() {
 
   return (
     <section className="relative overflow-hidden bg-primary py-24 text-primary-foreground md:py-32">
-      <div
+      <motion.div
         aria-hidden
         className="absolute inset-0 opacity-30"
         style={{
           backgroundImage:
             "radial-gradient(ellipse 60% 50% at 80% 0%, oklch(0.55 0.13 245 / 0.6), transparent 60%), radial-gradient(ellipse 50% 50% at 0% 100%, oklch(0.45 0.11 255 / 0.4), transparent 60%)",
         }}
+        animate={{
+          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
+        }}
+        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
       <div className="relative mx-auto grid w-full max-w-6xl gap-16 px-6 md:grid-cols-12">
-        <div className="md:col-span-5">
+        <Reveal className="md:col-span-5">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-medium backdrop-blur">
             <ShieldCheck className="h-3.5 w-3.5" />
             Governança e segurança
@@ -584,18 +588,19 @@ function Governance() {
             Tratamos segurança, privacidade e controle de dados como parte central do treinamento —
             não como detalhe. Sua equipe sai sabendo o que fazer, o que evitar e por quê.
           </p>
-        </div>
-        <ul className="grid gap-3 md:col-span-7 md:grid-cols-2">
+        </Reveal>
+        <Stagger as="ul" className="grid gap-3 md:col-span-7 md:grid-cols-2" staggerChildren={0.06}>
           {topics.map((t) => (
-            <li
+            <Item
+              as="li"
               key={t}
-              className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 p-4 text-sm backdrop-blur"
+              className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 p-4 text-sm backdrop-blur transition-colors hover:border-white/25 hover:bg-white/10"
             >
               <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.78_0.13_240)]" />
               <span className="text-white/90">{t}</span>
-            </li>
+            </Item>
           ))}
-        </ul>
+        </Stagger>
       </div>
     </section>
   );
@@ -606,7 +611,7 @@ function Governance() {
 function CTA() {
   return (
     <section id="contato" className="py-24 md:py-32">
-      <div className="mx-auto w-full max-w-4xl px-6 text-center">
+      <Reveal className="mx-auto w-full max-w-4xl px-6 text-center">
         <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
           Próximo passo
         </span>
@@ -618,21 +623,28 @@ function CTA() {
           e desenhamos a trilha de capacitação ideal para o seu time.
         </p>
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
-          <a
+          <motion.a
             href="mailto:contato@ia-operacional.com.br?subject=Diagn%C3%B3stico%20de%20IA"
-            className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-transform hover:-translate-y-0.5"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 22 }}
+            className="group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)]"
           >
             <Mail className="h-4 w-4" />
             Solicitar diagnóstico
-          </a>
-          <a
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </motion.a>
+          <motion.a
             href="#solucao"
-            className="inline-flex h-12 items-center justify-center rounded-md border border-border bg-background px-7 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent"
+            whileHover={{ y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 22 }}
+            className="inline-flex h-12 items-center justify-center rounded-md border border-border bg-background px-7 text-sm font-medium text-foreground hover:border-accent hover:text-accent"
           >
             Rever metodologia
-          </a>
+          </motion.a>
         </div>
-      </div>
+      </Reveal>
     </section>
   );
 }
