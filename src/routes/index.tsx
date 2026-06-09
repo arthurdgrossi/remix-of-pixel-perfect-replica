@@ -248,7 +248,7 @@ function Problem() {
   return (
     <section id="problema" className="border-b border-border bg-surface py-24 md:py-32">
       <div className="mx-auto grid w-full max-w-6xl gap-16 px-6 md:grid-cols-12">
-        <div className="md:col-span-5">
+        <Reveal className="md:col-span-5">
           <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
             O problema
           </span>
@@ -259,18 +259,19 @@ function Problem() {
             A maior parte das empresas já experimenta IA — mas de forma desorganizada, sem critério
             e sem segurança. O resultado são ganhos pontuais que não escalam para o time.
           </p>
-        </div>
-        <ul className="space-y-4 md:col-span-7">
+        </Reveal>
+        <Stagger as="ul" className="space-y-4 md:col-span-7">
           {items.map((t) => (
-            <li
+            <Item
+              as="li"
               key={t}
-              className="flex items-start gap-4 rounded-lg border border-border bg-card p-5 shadow-[var(--shadow-card)]"
+              className="flex items-start gap-4 rounded-lg border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-accent/40"
             >
               <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
               <span className="text-sm text-card-foreground md:text-base">{t}</span>
-            </li>
+            </Item>
           ))}
-        </ul>
+        </Stagger>
       </div>
     </section>
   );
