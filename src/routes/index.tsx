@@ -96,7 +96,7 @@ function Nav() {
 
 function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden">
+    <section id="top" className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <img
           src={heroImage}
