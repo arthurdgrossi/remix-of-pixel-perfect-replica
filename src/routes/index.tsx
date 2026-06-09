@@ -11,7 +11,9 @@ import {
   CheckCircle2,
   Mail,
 } from "lucide-react";
+import { motion, useReducedMotion } from "motion/react";
 import heroImage from "@/assets/hero.jpg";
+import { Reveal, Stagger, Item } from "@/components/reveal";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -95,15 +97,20 @@ function Nav() {
 /* -------------------------------------------------------------------------- */
 
 function Hero() {
+  const reduce = useReducedMotion();
+  const ease = [0.22, 1, 0.36, 1] as const;
   return (
     <section id="top" className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <img
+        <motion.img
           src={heroImage}
           alt=""
           width={1920}
           height={1080}
           className="h-full w-full object-cover opacity-95"
+          initial={reduce ? false : { scale: 1.08, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.95 }}
+          transition={{ duration: 1.6, ease }}
         />
         <div
           className="absolute inset-0"
@@ -112,45 +119,107 @@ function Hero() {
               "linear-gradient(180deg, oklch(0.18 0.06 265 / 0.55) 0%, oklch(0.18 0.06 265 / 0.85) 70%, var(--background) 100%)",
           }}
         />
+        <motion.div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-px"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent, oklch(0.78 0.13 240 / 0.7), transparent)",
+          }}
+          initial={{ opacity: 0, scaleX: 0.2 }}
+          animate={{ opacity: 1, scaleX: 1 }}
+          transition={{ duration: 1.4, delay: 0.4, ease }}
+        />
       </div>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start px-6 pb-32 pt-28 md:pt-40">
-        <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur">
-          <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
+        <motion.span
+          className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur"
+          initial={reduce ? false : { opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.1, ease }}
+        >
+          <motion.span
+            className="h-1.5 w-1.5 rounded-full bg-white/80"
+            animate={reduce ? undefined : { opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          />
           Treinamentos corporativos · IA aplicada
-        </span>
+        </motion.span>
 
-        <h1 className="mt-6 max-w-3xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
-          IA que vira <span className="text-[oklch(0.78_0.13_240)]">resultado</span> dentro
-          da sua empresa.
-        </h1>
+        <motion.h1
+          className="mt-6 max-w-3xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl"
+          initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.9, delay: 0.2, ease }}
+        >
+          IA que vira{" "}
+          <span className="relative inline-block text-[oklch(0.78_0.13_240)]">
+            resultado
+            <motion.span
+              aria-hidden
+              className="absolute inset-x-0 bottom-1 h-[3px] origin-left rounded-full bg-[oklch(0.78_0.13_240)]/40"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: 1 }}
+              transition={{ duration: 0.8, delay: 1, ease }}
+            />
+          </span>{" "}
+          dentro da sua empresa.
+        </motion.h1>
 
-        <p className="mt-6 max-w-2xl text-base text-white/75 md:text-lg">
+        <motion.p
+          className="mt-6 max-w-2xl text-base text-white/75 md:text-lg"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.45, ease }}
+        >
           Capacitamos equipes corporativas para usar Inteligência Artificial de forma prática, segura
           e orientada a resultados — aplicando as ferramentas certas em tarefas reais do dia a dia.
-        </p>
+        </motion.p>
 
-        <div className="mt-10 flex flex-wrap items-center gap-3">
-          <a
+        <motion.div
+          className="mt-10 flex flex-wrap items-center gap-3"
+          initial={reduce ? false : { opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.6, ease }}
+        >
+          <motion.a
             href="#contato"
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-[oklch(0.22_0.08_265)] shadow-[var(--shadow-elegant)] transition-transform hover:-translate-y-0.5"
+            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-[oklch(0.22_0.08_265)] shadow-[var(--shadow-elegant)]"
+            whileHover={reduce ? undefined : { y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 22 }}
           >
             Solicitar diagnóstico
-            <ArrowRight className="h-4 w-4" />
-          </a>
-          <a
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </motion.a>
+          <motion.a
             href="#solucao"
-            className="inline-flex h-11 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-white/10"
+            className="inline-flex h-11 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium text-white backdrop-blur"
+            whileHover={reduce ? undefined : { backgroundColor: "rgba(255,255,255,0.12)", y: -2 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 400, damping: 22 }}
           >
             Ver a metodologia
-          </a>
-        </div>
+          </motion.a>
+        </motion.div>
 
-        <dl className="mt-16 grid w-full max-w-3xl grid-cols-3 gap-6 border-t border-white/15 pt-8 text-white">
-          <Stat k="3" v="níveis de capacitação por perfil" />
-          <Stat k="100%" v="aplicado às tarefas reais da empresa" />
-          <Stat k="0" v="dependência de plataforma proprietária" />
-        </dl>
+        <Stagger
+          as="ul"
+          delayChildren={0.85}
+          staggerChildren={0.12}
+          className="mt-16 grid w-full max-w-3xl grid-cols-3 gap-6 border-t border-white/15 pt-8 text-white"
+        >
+          <Item as="li">
+            <Stat k="3" v="níveis de capacitação por perfil" />
+          </Item>
+          <Item as="li">
+            <Stat k="100%" v="aplicado às tarefas reais da empresa" />
+          </Item>
+          <Item as="li">
+            <Stat k="0" v="dependência de plataforma proprietária" />
+          </Item>
+        </Stagger>
       </div>
     </section>
   );
