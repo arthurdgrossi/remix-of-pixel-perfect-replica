@@ -310,7 +310,7 @@ function Levels() {
   return (
     <section id="solucao" className="py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
-        <div className="mx-auto max-w-2xl text-center">
+        <Reveal className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
             A metodologia
           </span>
@@ -321,40 +321,43 @@ function Levels() {
             Nem todos precisam aprender desenvolvimento assistido. Cada perfil aprende o que importa
             para o seu trabalho — sem ruído, sem teoria solta.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
+        <Stagger className="mt-16 grid gap-6 md:grid-cols-3" staggerChildren={0.12}>
           {levels.map(({ icon: Icon, ...l }) => (
-            <article
-              key={l.tag}
-              className="group relative flex flex-col rounded-xl border border-border bg-card p-7 shadow-[var(--shadow-card)] transition-all hover:-translate-y-1 hover:border-accent/40 hover:shadow-[var(--shadow-elegant)]"
-            >
-              <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-lg bg-[image:var(--gradient-accent)] text-primary-foreground">
-                <Icon className="h-5 w-5" />
-              </div>
-              <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-                {l.tag}
-              </span>
-              <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
-                {l.title}
-              </h3>
-              <p className="mt-1 text-xs font-medium text-muted-foreground">{l.audience}</p>
-              <p className="mt-4 flex-1 text-sm leading-relaxed text-card-foreground/80">
-                {l.body}
-              </p>
-              <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">
-                {l.tools.map((t) => (
-                  <span
-                    key={t}
-                    className="rounded-md bg-muted px-2 py-1 text-[11px] font-medium text-muted-foreground"
-                  >
-                    {t}
-                  </span>
-                ))}
-              </div>
-            </article>
+            <Item key={l.tag} as="article" className="h-full">
+              <motion.div
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                className="group relative flex h-full flex-col rounded-xl border border-border bg-card p-7 shadow-[var(--shadow-card)] hover:border-accent/40 hover:shadow-[var(--shadow-elegant)]"
+              >
+                <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-lg bg-[image:var(--gradient-accent)] text-primary-foreground transition-transform group-hover:scale-110">
+                  <Icon className="h-5 w-5" />
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
+                  {l.tag}
+                </span>
+                <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
+                  {l.title}
+                </h3>
+                <p className="mt-1 text-xs font-medium text-muted-foreground">{l.audience}</p>
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-card-foreground/80">
+                  {l.body}
+                </p>
+                <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">
+                  {l.tools.map((t) => (
+                    <span
+                      key={t}
+                      className="rounded-md bg-muted px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors group-hover:bg-accent/10 group-hover:text-accent"
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </motion.div>
+            </Item>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
