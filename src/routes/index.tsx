@@ -403,7 +403,7 @@ function Offers() {
   return (
     <section id="ofertas" className="border-y border-border bg-surface py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
-        <div className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
+        <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
             <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
               Modelos de oferta
@@ -416,63 +416,67 @@ function Offers() {
             Cada formato pode ser adaptado para o seu setor: indústria, serviços, RH, comercial,
             financeiro, qualidade ou jurídico.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <Stagger className="mt-14 grid gap-6 md:grid-cols-3" staggerChildren={0.14}>
           {offers.map((o) => (
-            <article
-              key={o.title}
-              className={
-                o.featured
-                  ? "relative flex flex-col rounded-xl bg-primary p-8 text-primary-foreground shadow-[var(--shadow-elegant)] md:-mt-4"
-                  : "relative flex flex-col rounded-xl border border-border bg-card p-8 shadow-[var(--shadow-card)]"
-              }
-            >
-              <span
+            <Item key={o.title} as="article" className="h-full">
+              <motion.div
+                whileHover={{ y: -6 }}
+                transition={{ type: "spring", stiffness: 300, damping: 22 }}
                 className={
                   o.featured
-                    ? "inline-block w-fit rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white"
-                    : "inline-block w-fit rounded-full bg-accent/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent"
+                    ? "relative flex h-full flex-col rounded-xl bg-primary p-8 text-primary-foreground shadow-[var(--shadow-elegant)] md:-mt-4"
+                    : "relative flex h-full flex-col rounded-xl border border-border bg-card p-8 shadow-[var(--shadow-card)]"
                 }
               >
-                {o.tag}
-              </span>
-              <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight">
-                {o.title}
-              </h3>
-              <p className={o.featured ? "mt-3 text-sm text-white/75" : "mt-3 text-sm text-muted-foreground"}>
-                {o.body}
-              </p>
-              <ul className="mt-6 flex-1 space-y-3">
-                {o.bullets.map((b) => (
-                  <li key={b} className="flex items-start gap-3 text-sm">
-                    <CheckCircle2
-                      className={
-                        o.featured
-                          ? "mt-0.5 h-4 w-4 shrink-0 text-white/90"
-                          : "mt-0.5 h-4 w-4 shrink-0 text-accent"
-                      }
-                    />
-                    <span className={o.featured ? "text-white/90" : "text-card-foreground/85"}>
-                      {b}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="#contato"
-                className={
-                  o.featured
-                    ? "mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-primary transition-transform hover:-translate-y-0.5"
-                    : "mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent"
-                }
-              >
-                Saber mais
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </article>
+                <span
+                  className={
+                    o.featured
+                      ? "inline-block w-fit rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white"
+                      : "inline-block w-fit rounded-full bg-accent/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent"
+                  }
+                >
+                  {o.tag}
+                </span>
+                <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight">
+                  {o.title}
+                </h3>
+                <p className={o.featured ? "mt-3 text-sm text-white/75" : "mt-3 text-sm text-muted-foreground"}>
+                  {o.body}
+                </p>
+                <ul className="mt-6 flex-1 space-y-3">
+                  {o.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-3 text-sm">
+                      <CheckCircle2
+                        className={
+                          o.featured
+                            ? "mt-0.5 h-4 w-4 shrink-0 text-white/90"
+                            : "mt-0.5 h-4 w-4 shrink-0 text-accent"
+                        }
+                      />
+                      <span className={o.featured ? "text-white/90" : "text-card-foreground/85"}>
+                        {b}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <motion.a
+                  href="#contato"
+                  whileTap={{ scale: 0.97 }}
+                  className={
+                    o.featured
+                      ? "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-primary"
+                      : "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent"
+                  }
+                >
+                  Saber mais
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />
+                </motion.a>
+              </motion.div>
+            </Item>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
@@ -517,26 +521,29 @@ function Differentials() {
   return (
     <section id="diferenciais" className="py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
             Diferenciais
           </span>
           <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl">
             Não é mais um curso genérico de prompts.
           </h2>
-        </div>
+        </Reveal>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3">
+        <Stagger
+          className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3"
+          staggerChildren={0.07}
+        >
           {items.map(({ icon: Icon, ...d }) => (
-            <div key={d.title} className="bg-card p-7">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent">
+            <Item key={d.title} className="group relative bg-card p-7 transition-colors hover:bg-accent/[0.03]">
+              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent transition-transform group-hover:scale-110 group-hover:rotate-3">
                 <Icon className="h-5 w-5" />
               </div>
               <h3 className="mt-5 font-display text-lg font-semibold tracking-tight">{d.title}</h3>
               <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{d.body}</p>
-            </div>
+            </Item>
           ))}
-        </div>
+        </Stagger>
       </div>
     </section>
   );
