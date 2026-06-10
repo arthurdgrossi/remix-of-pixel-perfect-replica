@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import {
   ArrowRight,
   Brain,
@@ -13,10 +13,11 @@ import {
   Mail,
   Menu,
 } from "lucide-react";
-import { motion, MotionConfig, useReducedMotion } from "motion/react";
+import { motion, MotionConfig } from "motion/react";
 import heroImage from "@/assets/hero.jpg";
 import { Reveal, Stagger, Item } from "@/components/reveal";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { cn } from "@/lib/utils";
 import {
   Sheet,
   SheetContent,
@@ -80,6 +81,73 @@ function Landing() {
 }
 
 /* -------------------------------------------------------------------------- */
+/* Shared primitives                                                          */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Brand lettermark — a navy "iA" tile with an accent underline. Uses the stable
+ * `feature` tokens so it stays navy/white in both themes (unlike `primary`,
+ * which inverts). Replaces the generic sparkle-in-a-gradient logo.
+ */
+function BrandMark({ className }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={cn(
+        "relative grid h-7 w-7 place-items-center rounded-md bg-feature font-display text-[13px] font-bold leading-none tracking-tight text-feature-foreground",
+        className,
+      )}
+    >
+      iA
+      <span className="absolute inset-x-[5px] bottom-[5px] h-[2px] rounded-full bg-feature-accent" />
+    </span>
+  );
+}
+
+/**
+ * Editorial section eyebrow: a tabular index number + hairline rule + label.
+ * One consistent system across every section, which reads as deliberate rather
+ * than the default "uppercase tracked label" repeated five times.
+ */
+function SectionLabel({
+  index,
+  children,
+  className,
+  tone = "default",
+}: {
+  index: string;
+  children: ReactNode;
+  className?: string;
+  tone?: "default" | "feature";
+}) {
+  const onFeature = tone === "feature";
+  return (
+    <div className={cn("flex items-center gap-3", className)}>
+      <span
+        className={cn(
+          "font-display text-sm font-semibold tabular-nums",
+          onFeature ? "text-feature-accent" : "text-accent",
+        )}
+      >
+        {index}
+      </span>
+      <span
+        aria-hidden
+        className={cn("h-px w-8", onFeature ? "bg-white/20" : "bg-border")}
+      />
+      <span
+        className={cn(
+          "text-[11px] font-semibold uppercase tracking-[0.22em]",
+          onFeature ? "text-feature-muted" : "text-muted-foreground",
+        )}
+      >
+        {children}
+      </span>
+    </div>
+  );
+}
+
+/* -------------------------------------------------------------------------- */
 
 function Nav() {
   const [open, setOpen] = useState(false);
@@ -89,11 +157,9 @@ function Nav() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
         <a
           href="#top"
-          className={`flex items-center gap-2 rounded-md font-display text-base font-semibold tracking-tight ${focusRing}`}
+          className={`flex items-center gap-2.5 rounded-md font-display text-base font-semibold tracking-tight ${focusRing}`}
         >
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-[image:var(--gradient-accent)] text-primary-foreground">
-            <Sparkles className="h-4 w-4" />
-          </span>
+          <BrandMark />
           IA Operacional
         </a>
 
@@ -122,16 +188,14 @@ function Nav() {
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger
               aria-label="Abrir menu"
-              className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-border/60 bg-background/40 text-foreground/80 transition-colors hover:text-foreground hover:bg-accent/10 md:hidden ${focusRing}`}
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-border/60 bg-background/40 text-foreground/80 transition-colors hover:bg-accent/10 hover:text-foreground md:hidden ${focusRing}`}
             >
               <Menu className="h-5 w-5" />
             </SheetTrigger>
             <SheetContent side="right" aria-describedby={undefined} className="w-72 border-border">
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2 font-display">
-                  <span className="grid h-7 w-7 place-items-center rounded-md bg-[image:var(--gradient-accent)] text-primary-foreground">
-                    <Sparkles className="h-4 w-4" />
-                  </span>
+                <SheetTitle className="flex items-center gap-2.5 font-display">
+                  <BrandMark />
                   IA Operacional
                 </SheetTitle>
               </SheetHeader>
@@ -166,7 +230,6 @@ function Nav() {
 
 function Hero() {
   const ease = [0.22, 1, 0.36, 1] as const;
-  const reduced = useReducedMotion();
 
   return (
     <section id="top" className="relative isolate overflow-hidden">
@@ -201,23 +264,24 @@ function Hero() {
         />
       </div>
 
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-start px-6 pb-32 pt-28 md:pt-40">
+      <div className="mx-auto flex w-full max-w-6xl flex-col items-start px-6 pb-28 pt-28 md:pb-36 md:pt-40">
         <motion.span
           className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease }}
         >
-          <motion.span
-            className="h-1.5 w-1.5 rounded-full bg-white/80"
-            animate={reduced ? undefined : { opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+          <span
+            className="h-1.5 w-1.5 rounded-full bg-feature-accent"
+            style={{
+              boxShadow: "0 0 0 3px color-mix(in oklab, var(--feature-accent) 25%, transparent)",
+            }}
           />
           Treinamentos corporativos · IA aplicada
         </motion.span>
 
         <motion.h1
-          className="mt-6 max-w-3xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl"
+          className="mt-7 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl"
           initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.9, delay: 0.2, ease }}
@@ -237,7 +301,7 @@ function Hero() {
         </motion.h1>
 
         <motion.p
-          className="mt-6 max-w-2xl text-base text-white/75 md:text-lg"
+          className="mt-6 max-w-2xl text-base leading-relaxed text-white/80 md:text-lg"
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.45, ease }}
@@ -254,7 +318,7 @@ function Hero() {
         >
           <motion.a
             href="#contato"
-            className={`group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-primary shadow-[var(--shadow-elegant)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
+            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-feature shadow-[var(--shadow-elegant)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
@@ -264,7 +328,7 @@ function Hero() {
           </motion.a>
           <motion.a
             href="#solucao"
-            className={`inline-flex h-11 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium text-white backdrop-blur focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
+            className="inline-flex h-11 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium text-white backdrop-blur focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             whileHover={{ backgroundColor: "rgba(255,255,255,0.12)", y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
@@ -277,7 +341,7 @@ function Hero() {
           as="ul"
           delayChildren={0.85}
           staggerChildren={0.12}
-          className="mt-16 grid w-full max-w-3xl grid-cols-1 gap-6 border-t border-white/15 pt-8 text-white sm:grid-cols-3 sm:gap-8"
+          className="mt-16 grid w-full max-w-3xl grid-cols-1 gap-8 border-t border-white/15 pt-8 text-white sm:grid-cols-3"
         >
           <Item as="li">
             <Stat k="3" v="níveis de capacitação por perfil" />
@@ -296,9 +360,9 @@ function Hero() {
 
 function Stat({ k, v }: { k: string; v: string }) {
   return (
-    <div>
+    <div className="sm:border-l sm:border-white/15 sm:pl-5">
       <dt className="font-display text-3xl font-semibold tracking-tight md:text-4xl">{k}</dt>
-      <dd className="mt-1 text-xs text-white/65 md:text-sm">{v}</dd>
+      <dd className="mt-1.5 text-sm leading-snug text-white/70">{v}</dd>
     </div>
   );
 }
@@ -316,28 +380,28 @@ function Problem() {
   ];
   return (
     <section id="problema" className="border-b border-border bg-surface py-24 md:py-32">
-      <div className="mx-auto grid w-full max-w-6xl gap-16 px-6 md:grid-cols-12">
-        <Reveal className="md:col-span-5">
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
-            O problema
-          </span>
-          <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+      <div className="mx-auto grid w-full max-w-6xl gap-x-16 gap-y-12 px-6 md:grid-cols-12">
+        <Reveal className="md:col-span-5 md:sticky md:top-28 md:self-start">
+          <SectionLabel index="01">O problema</SectionLabel>
+          <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
             O problema não é o acesso à IA. É a falta de método.
           </h2>
-          <p className="mt-6 text-muted-foreground">
+          <p className="mt-6 text-base leading-relaxed text-muted-foreground">
             A maior parte das empresas já experimenta IA — mas de forma desorganizada, sem critério
             e sem segurança. O resultado são ganhos pontuais que não escalam para o time.
           </p>
         </Reveal>
-        <Stagger as="ul" className="space-y-4 md:col-span-7">
-          {items.map((t) => (
+        <Stagger as="ul" className="space-y-3 md:col-span-7" staggerChildren={0.07}>
+          {items.map((t, i) => (
             <Item
               as="li"
               key={t}
-              className="flex items-start gap-4 rounded-lg border border-border bg-card p-5 shadow-[var(--shadow-card)] transition-colors hover:border-accent/40"
+              className="flex items-start gap-4 rounded-lg border border-border bg-card p-5 transition-colors hover:border-accent/40"
             >
-              <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-accent" />
-              <span className="text-sm text-card-foreground md:text-base">{t}</span>
+              <span className="mt-0.5 font-display text-sm font-semibold tabular-nums text-accent/70">
+                {String(i + 1).padStart(2, "0")}
+              </span>
+              <span className="text-sm leading-relaxed text-card-foreground md:text-base">{t}</span>
             </Item>
           ))}
         </Stagger>
@@ -380,13 +444,13 @@ function Levels() {
     <section id="solucao" className="py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
+          <SectionLabel index="02" className="justify-center">
             A metodologia
-          </span>
-          <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+          </SectionLabel>
+          <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
             Três níveis de capacitação, conforme o perfil do colaborador.
           </h2>
-          <p className="mt-6 text-muted-foreground">
+          <p className="mt-6 text-base leading-relaxed text-muted-foreground">
             Nem todos precisam aprender desenvolvimento assistido. Cada perfil aprende o que importa
             para o seu trabalho — sem ruído, sem teoria solta.
           </p>
@@ -396,28 +460,26 @@ function Levels() {
           {levels.map(({ icon: Icon, ...l }) => (
             <Item key={l.tag} as="article" className="h-full">
               <motion.div
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className="group relative flex h-full flex-col rounded-xl border border-border bg-card p-7 shadow-[var(--shadow-card)] hover:border-accent/40 hover:shadow-[var(--shadow-elegant)]"
+                whileHover={{ y: -4 }}
+                transition={{ type: "spring", stiffness: 300, damping: 24 }}
+                className="group relative flex h-full flex-col rounded-xl border border-border bg-card p-7 shadow-[var(--shadow-card)] transition-[border-color,box-shadow] hover:border-accent/40 hover:shadow-[var(--shadow-elegant)]"
               >
-                <div className="mb-6 flex h-11 w-11 items-center justify-center rounded-lg bg-[image:var(--gradient-accent)] text-primary-foreground transition-transform group-hover:scale-110">
-                  <Icon className="h-5 w-5" />
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-accent/25 bg-accent/[0.08] text-accent transition-colors group-hover:border-accent/50">
+                    <Icon className="h-5 w-5" />
+                  </div>
+                  <span className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-accent">
+                    {l.tag}
+                  </span>
                 </div>
-                <span className="text-xs font-semibold uppercase tracking-[0.16em] text-accent">
-                  {l.tag}
-                </span>
-                <h3 className="mt-2 font-display text-xl font-semibold tracking-tight">
-                  {l.title}
-                </h3>
-                <p className="mt-1 text-xs font-medium text-muted-foreground">{l.audience}</p>
-                <p className="mt-4 flex-1 text-sm leading-relaxed text-card-foreground/80">
-                  {l.body}
-                </p>
+                <h3 className="font-display text-xl font-semibold tracking-tight">{l.title}</h3>
+                <p className="mt-1.5 text-xs font-medium text-muted-foreground">{l.audience}</p>
+                <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">{l.body}</p>
                 <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">
                   {l.tools.map((t) => (
                     <span
                       key={t}
-                      className="rounded-md bg-muted px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors group-hover:bg-accent/10 group-hover:text-accent"
+                      className="rounded-md border border-border bg-muted/60 px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors group-hover:border-accent/30 group-hover:text-foreground"
                     >
                       {t}
                     </span>
@@ -474,14 +536,12 @@ function Offers() {
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
-            <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
-              Modelos de oferta
-            </span>
-            <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+            <SectionLabel index="03">Modelos de oferta</SectionLabel>
+            <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
               Três formatos para começar onde faz sentido.
             </h2>
           </div>
-          <p className="max-w-sm text-sm text-muted-foreground">
+          <p className="max-w-sm text-sm leading-relaxed text-muted-foreground">
             Cada formato pode ser adaptado para o seu setor: indústria, serviços, RH, comercial,
             financeiro, qualidade ou jurídico.
           </p>
@@ -491,40 +551,45 @@ function Offers() {
           {offers.map((o) => (
             <Item key={o.title} as="article" className="h-full">
               <motion.div
-                whileHover={{ y: -6 }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
+                whileHover={{ y: -4 }}
+                transition={{ type: "spring", stiffness: 300, damping: 24 }}
                 className={
                   o.featured
-                    ? "relative flex h-full flex-col rounded-xl bg-primary p-8 text-primary-foreground shadow-[var(--shadow-elegant)] md:-mt-4"
+                    ? "relative flex h-full flex-col rounded-xl bg-feature p-8 text-feature-foreground shadow-[var(--shadow-elegant)] ring-1 ring-feature-border md:-mt-4"
                     : "relative flex h-full flex-col rounded-xl border border-border bg-card p-8 shadow-[var(--shadow-card)]"
                 }
               >
                 <span
                   className={
                     o.featured
-                      ? "inline-block w-fit rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-white"
+                      ? "inline-flex w-fit items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-feature-foreground"
                       : "inline-block w-fit rounded-full bg-accent/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent"
                   }
                 >
+                  {o.featured && <span className="h-1.5 w-1.5 rounded-full bg-feature-accent" />}
                   {o.tag}
                 </span>
-                <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight">
-                  {o.title}
-                </h3>
-                <p className={o.featured ? "mt-3 text-sm text-white/75" : "mt-3 text-sm text-muted-foreground"}>
+                <h3 className="mt-5 font-display text-2xl font-semibold tracking-tight">{o.title}</h3>
+                <p
+                  className={
+                    o.featured
+                      ? "mt-3 text-sm leading-relaxed text-feature-muted"
+                      : "mt-3 text-sm leading-relaxed text-muted-foreground"
+                  }
+                >
                   {o.body}
                 </p>
-                <ul className="mt-6 flex-1 space-y-3">
+                <ul className="mt-6 flex-1 space-y-3 border-t border-border pt-6">
                   {o.bullets.map((b) => (
                     <li key={b} className="flex items-start gap-3 text-sm">
                       <CheckCircle2
                         className={
                           o.featured
-                            ? "mt-0.5 h-4 w-4 shrink-0 text-white/90"
+                            ? "mt-0.5 h-4 w-4 shrink-0 text-feature-accent"
                             : "mt-0.5 h-4 w-4 shrink-0 text-accent"
                         }
                       />
-                      <span className={o.featured ? "text-white/90" : "text-card-foreground/85"}>
+                      <span className={o.featured ? "text-feature-foreground/90" : "text-card-foreground"}>
                         {b}
                       </span>
                     </li>
@@ -535,7 +600,7 @@ function Offers() {
                   whileTap={{ scale: 0.97 }}
                   className={
                     o.featured
-                      ? `group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary`
+                      ? "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-feature transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-feature"
                       : `group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent ${focusRing}`
                   }
                 >
@@ -591,21 +656,22 @@ function Differentials() {
     <section id="diferenciais" className="py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal className="max-w-2xl">
-          <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
-            Diferenciais
-          </span>
-          <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+          <SectionLabel index="04">Diferenciais</SectionLabel>
+          <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
             Não é mais um curso genérico de prompts.
           </h2>
         </Reveal>
 
         <Stagger
-          className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border md:grid-cols-3"
+          className="mt-14 grid gap-px overflow-hidden rounded-xl border border-border bg-border sm:grid-cols-2 md:grid-cols-3"
           staggerChildren={0.07}
         >
           {items.map(({ icon: Icon, ...d }) => (
-            <Item key={d.title} className="group relative bg-card p-7 transition-colors hover:bg-accent/[0.03]">
-              <div className="flex h-10 w-10 items-center justify-center rounded-md bg-accent/10 text-accent transition-transform group-hover:scale-110 group-hover:rotate-3">
+            <Item
+              key={d.title}
+              className="group relative bg-card p-7 transition-colors hover:bg-accent/[0.04]"
+            >
+              <div className="flex h-10 w-10 items-center justify-center rounded-md border border-accent/25 bg-accent/[0.08] text-accent transition-colors group-hover:border-accent/50">
                 <Icon className="h-5 w-5" />
               </div>
               <h3 className="mt-5 font-display text-lg font-semibold tracking-tight">{d.title}</h3>
@@ -621,7 +687,6 @@ function Differentials() {
 /* -------------------------------------------------------------------------- */
 
 function Governance() {
-  const reduced = useReducedMotion();
   const topics = [
     "Quais informações podem ou não ser inseridas em ferramentas externas",
     "Cuidado com dados pessoais, documentos internos e informações confidenciais",
@@ -632,27 +697,34 @@ function Governance() {
   ];
 
   return (
-    <section className="relative overflow-hidden bg-primary py-24 text-primary-foreground md:py-32">
-      <motion.div
+    <section className="relative isolate overflow-hidden bg-feature py-24 text-feature-foreground md:py-32">
+      {/* Restrained static texture — a single soft top-edge glow, no looping
+          animation. */}
+      <div
         aria-hidden
-        className="absolute inset-0 opacity-30"
+        className="pointer-events-none absolute inset-0 -z-10 opacity-60"
         style={{
           backgroundImage:
-            "radial-gradient(ellipse 60% 50% at 80% 0%, oklch(0.55 0.13 245 / 0.6), transparent 60%), radial-gradient(ellipse 50% 50% at 0% 100%, oklch(0.45 0.11 255 / 0.4), transparent 60%)",
+            "radial-gradient(ellipse 70% 55% at 85% -10%, color-mix(in oklab, var(--feature-accent) 18%, transparent), transparent 60%)",
         }}
-        animate={reduced ? undefined : { backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"] }}
-        transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
-      <div className="relative mx-auto grid w-full max-w-6xl gap-16 px-6 md:grid-cols-12">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 h-px"
+        style={{
+          background:
+            "linear-gradient(90deg, transparent, color-mix(in oklab, var(--feature-accent) 55%, transparent), transparent)",
+        }}
+      />
+      <div className="mx-auto grid w-full max-w-6xl gap-x-16 gap-y-12 px-6 md:grid-cols-12">
         <Reveal className="md:col-span-5">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-medium backdrop-blur">
-            <ShieldCheck className="h-3.5 w-3.5" />
+          <SectionLabel index="05" tone="feature">
             Governança e segurança
-          </div>
-          <h2 className="mt-5 font-display text-3xl font-semibold tracking-tight md:text-4xl">
+          </SectionLabel>
+          <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
             IA dentro da empresa exige critério.
           </h2>
-          <p className="mt-6 text-white/75">
+          <p className="mt-6 text-base leading-relaxed text-feature-muted">
             Tratamos segurança, privacidade e controle de dados como parte central do treinamento —
             não como detalhe. Sua equipe sai sabendo o que fazer, o que evitar e por quê.
           </p>
@@ -662,10 +734,10 @@ function Governance() {
             <Item
               as="li"
               key={t}
-              className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 p-4 text-sm backdrop-blur transition-colors hover:border-white/25 hover:bg-white/10"
+              className="flex items-start gap-3 rounded-lg border border-feature-border bg-white/[0.04] p-4 text-sm transition-colors hover:border-white/25 hover:bg-white/[0.07]"
             >
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-highlight" />
-              <span className="text-white/90">{t}</span>
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-feature-accent" />
+              <span className="text-feature-foreground/90">{t}</span>
             </Item>
           ))}
         </Stagger>
@@ -680,13 +752,13 @@ function CTA() {
   return (
     <section id="contato" className="py-24 md:py-32">
       <Reveal className="mx-auto w-full max-w-4xl px-6 text-center">
-        <span className="text-xs font-medium uppercase tracking-[0.18em] text-accent">
+        <SectionLabel index="06" className="justify-center">
           Próximo passo
-        </span>
-        <h2 className="mt-4 font-display text-3xl font-semibold tracking-tight md:text-5xl">
+        </SectionLabel>
+        <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
           Vamos mapear onde sua empresa pode ganhar tempo com IA.
         </h2>
-        <p className="mx-auto mt-6 max-w-xl text-muted-foreground">
+        <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
           Comece com um diagnóstico curto. Identificamos as tarefas com maior potencial de retorno
           e desenhamos a trilha de capacitação ideal para o seu time.
         </p>
@@ -707,7 +779,7 @@ function CTA() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
-            className={`inline-flex h-12 items-center justify-center rounded-md border border-border bg-background px-7 text-sm font-medium text-foreground hover:border-accent hover:text-accent ${focusRing}`}
+            className={`inline-flex h-12 items-center justify-center rounded-md border border-border bg-background px-7 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent ${focusRing}`}
           >
             Rever metodologia
           </motion.a>
@@ -723,10 +795,8 @@ function Footer() {
   return (
     <footer className="border-t border-border bg-surface py-12">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-6 px-6 text-sm text-muted-foreground md:flex-row md:items-center">
-        <div className="flex items-center gap-2 font-display font-semibold text-foreground">
-          <span className="grid h-7 w-7 place-items-center rounded-md bg-[image:var(--gradient-accent)] text-primary-foreground">
-            <Sparkles className="h-4 w-4" />
-          </span>
+        <div className="flex items-center gap-2.5 font-display font-semibold text-foreground">
+          <BrandMark />
           IA Operacional
         </div>
         <p>© {new Date().getFullYear()} · Treinamento de IA aplicada para empresas.</p>
@@ -734,4 +804,3 @@ function Footer() {
     </footer>
   );
 }
-

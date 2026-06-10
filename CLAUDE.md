@@ -256,3 +256,68 @@ Drove the running app with the chrome-devtools MCP: dark render, mobile resize (
 2. Designer QA of light theme across all breakpoints; consider persisting theme via cookie (so SSR can render the right theme and drop `suppressHydrationWarning`).
 3. Build the lead-capture form (#8) with a server function.
 4. Optionally self-host Sora/Manrope in `public/` to drop the runtime Google Fonts dependency entirely.
+
+---
+
+# Session Work Log — 2026-06-10 (De-"AI-look" pass + dark-mode contrast fixes)
+
+Goal: make the landing page feel intentionally/manually designed (less templated/AI-generated) and fix dark-mode readability. Visual identity preserved (navy/corporate, Sora+Manrope, same seven sections, OKLCH token system) — refined, not rebuilt.
+
+### Files inspected
+`src/routes/index.tsx`, `src/styles.css`, `src/routes/__root.tsx`, `src/components/reveal.tsx`, `src/components/theme-toggle.tsx`, `src/lib/utils.ts`, `src/assets/` + `public/` (hero.jpg, favicon.svg, og-image.jpg present).
+
+### Root-cause bug found: `--primary` inverts between themes
+`--primary` is deep navy in `:root` (light) but **near-white** (`oklch(0.97 …)`) in `.dark`. Several sections used `bg-primary` to mean "dark navy panel" and then hardcoded **`text-white/...`** content inside. In dark mode (the site default) those became **white-on-white → invisible**:
+- **Governance** band (`bg-primary` + white heading/body/topic cards) — whole section unreadable in dark.
+- **Featured Offer** card "Workshop Prático" (`bg-primary` + white tag/bullets, `bg-white text-primary` button → white-on-white label).
+- **Hero** primary CTA (`text-primary` label on a white button → invisible in dark).
+
+This is the classic "Lovable color choice caused poor contrast" the task flagged.
+
+### Color / token fixes (`src/styles.css`)
+- Added a **stable "ink" feature surface** token set that stays deep navy in **both** themes, so panels meant to read white-on-navy never invert: `--feature`, `--feature-foreground`, `--feature-muted`, `--feature-border`, `--feature-accent` (+ `--color-feature*` mappings in `@theme inline`). In `.dark` the band is lifted slightly (`--feature: 0.245`) with a touch more border so it still reads elevated.
+- Bumped dark **`--muted-foreground`** `0.70 → 0.745` for small body/caption legibility on dark cards.
+
+### UI changes (`src/routes/index.tsx`)
+De-templating (less "AI look"):
+- **New `BrandMark`** — a navy "iA" lettermark tile with an accent underline, replacing the generic **Sparkles-in-a-gradient-box** logo (used in Nav, mobile sheet, Footer).
+- **New `SectionLabel`** — one editorial eyebrow system (tabular index number `01`–`06` + hairline rule + tracked label) replacing the five near-identical `uppercase tracking` eyebrows. `tone="feature"` variant for the dark band.
+- **Restrained icon treatment** — every icon moved off the filled `--gradient-accent` square to a consistent bordered `border-accent/25 bg-accent/[0.08] text-accent` chip; removed the cutesy `group-hover:scale-110 group-hover:rotate-3` spins. Card hover lift softened `-6 → -4`.
+- **Hero**: removed the infinite **pulsing dot** (now a static glow-ring dot); tighter heading leading; stat grid gains left rule dividers; caption contrast `/65 → /70`.
+- **Problem**: numbered list items (`01…06`) + sticky intro column for rhythm.
+- **Levels**: icon + level tag on one row; body text moved to `text-muted-foreground` (was opacity-hacked `card-foreground/80`); tool tags now bordered chips.
+- **Differentials**: `sm:grid-cols-2` added (was 1→3 only); same restrained icon chip.
+- **Governance**: replaced the **22s looping radial-gradient glow** with a single static soft top-edge glow + hairline (honours "avoid unnecessary glow"); all content re-tokenized to `feature-*`.
+
+Dark-mode contrast fixes (the bug above):
+- Governance + featured Offer card → `bg-feature text-feature-foreground` (stable navy), inner text → `text-feature-muted` / `text-feature-foreground/90`, checks → `text-feature-accent`.
+- Hero CTA + featured Offer button label → `text-feature` (stable navy on the white button) instead of inverting `text-primary`.
+- Replaced opacity-hacked body text (`card-foreground/80`, `/85`, `text-white/75`) with semantic tokens throughout.
+
+### Commands executed
+```
+bunx tsc --noEmit        # EXIT 0 (run twice — before and after the hydration fix)
+bun run build            # EXIT 0 — client + SSR built (dist/ written)
+bun dev                  # served http://localhost:8080
+bun lint                 # CRLF-only errors + 7 pre-existing react-refresh warnings (no new genuine issues)
+```
+Drove the running app with the chrome-devtools MCP at 1280px (dark + light, full-page), 390px mobile, and zoomed Offers/Governance. Screenshots in `.claude/skills/run-helpia-base/`: `redesign-dark-full.png`, `redesign-dark-offers.png`, `redesign-dark-gov.png`, `redesign-light-full.png`, `redesign-mobile.png`.
+
+### Validation results
+- **TypeScript**: clean (`tsc --noEmit` exit 0).
+- **Build**: success (exit 0).
+- **Runtime console**: clean. Caught & **fixed a hydration mismatch** I introduced — the hero dot's static `box-shadow` was gated on `useReducedMotion()` (null on SSR, true on the reduced-motion test client); made it unconditional (it's decoration, not motion) and dropped the now-unused hook. Only remaining console line is the benign Motion reduced-motion notice (test device requests it).
+- **Visual**: Governance band and featured card now fully readable in **dark** mode (previously invisible); in **light** mode both read as deliberate dark contrast bands. Mobile nav/hero intact.
+- **Lint**: unchanged failure mode — 4949 CRLF `prettier/prettier` errors + 7 react-refresh warnings; **0 new genuine issues**.
+
+### Remaining UI / design issues
+- **CRLF lint wall** persists (no `.gitattributes`) — cosmetic, unchanged.
+- In **dark** mode the featured Offer card sits only slightly above its neighbours (feature 0.245 vs card 0.22); it's distinguished by ring + badge dot + white button. Fine, but a stronger differentiator (e.g. accent ring) is an option.
+- Contact CTA is still **`mailto:`** only — real lead form still deferred (#8 from prior log).
+- Theme still defaults dark with `suppressHydrationWarning`; a cookie-driven SSR theme would let that be dropped.
+
+### Recommended next improvements
+1. `.gitattributes` (`* text=auto eol=lf`) + renormalize to clear the CRLF lint noise.
+2. Build the lead-capture form (server function + provider) to replace the bare `mailto:`.
+3. Cookie-based theme so SSR renders the chosen theme (drop `suppressHydrationWarning`).
+4. Consider a distinct OG/social image (currently the hero photo) and self-hosting fonts.

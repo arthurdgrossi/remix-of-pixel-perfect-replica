@@ -41,6 +41,13 @@
   --color-input: var(--input);
   --color-ring: var(--ring);
   --color-highlight: var(--highlight);
+
+  /* Stable "ink" feature surface — see tokens in :root. */
+  --color-feature: var(--feature);
+  --color-feature-foreground: var(--feature-foreground);
+  --color-feature-muted: var(--feature-muted);
+  --color-feature-border: var(--feature-border);
+  --color-feature-accent: var(--feature-accent);
 }
 
 :root {
@@ -66,6 +73,15 @@
   --accent-foreground: oklch(0.99 0.005 250);
 
   --highlight: oklch(0.78 0.13 240);           /* bright sky-blue — headline accent / checks */
+
+  /* Stable "ink" feature surface — always deep navy in BOTH themes, so emphasis
+     panels meant to read white-on-navy (Governance band, featured plan, hero CTA
+     label) do NOT invert when --primary flips to near-white in dark mode. */
+  --feature: oklch(0.21 0.07 265);
+  --feature-foreground: oklch(0.98 0.008 250);
+  --feature-muted: oklch(0.80 0.03 255);       /* readable secondary text on the band */
+  --feature-border: oklch(1 0 0 / 12%);
+  --feature-accent: oklch(0.80 0.12 240);      /* checks / index numbers on the band */
 
   --secondary: oklch(0.36 0.09 255);           /* mid navy #1e3a5f */
   --secondary-foreground: oklch(0.97 0.01 250);
@@ -103,12 +119,17 @@
   --secondary: oklch(0.30 0.08 260);
   --secondary-foreground: oklch(0.97 0.01 250);
   --muted: oklch(0.28 0.06 260);
-  --muted-foreground: oklch(0.70 0.03 250);
+  --muted-foreground: oklch(0.745 0.032 250);  /* brighter than stock 0.70 — small body/caption legibility on dark cards */
   --destructive: oklch(0.65 0.20 22);
   --destructive-foreground: oklch(0.97 0.01 250);
   --border: oklch(1 0 0 / 12%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.65 0.14 240);
+
+  /* Lift the always-navy band slightly off the dark background, plus a touch
+     more border so it still reads as an elevated panel in dark mode. */
+  --feature: oklch(0.245 0.07 265);
+  --feature-border: oklch(1 0 0 / 14%);
 }
 
 @layer base {
