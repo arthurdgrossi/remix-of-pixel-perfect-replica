@@ -1,4 +1,4 @@
-import { motion, type Variants, useReducedMotion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import type { ReactNode } from "react";
 
 type RevealProps = {
@@ -20,11 +20,7 @@ const baseVariants = (y: number): Variants => ({
 });
 
 export function Reveal({ children, className, delay = 0, y = 24, as = "div" }: RevealProps) {
-  const reduce = useReducedMotion();
   const MotionTag = motion[as] as typeof motion.div;
-  if (reduce) {
-    return <MotionTag className={className}>{children}</MotionTag>;
-  }
   return (
     <MotionTag
       className={className}
@@ -52,9 +48,7 @@ export function Stagger({
   staggerChildren?: number;
   as?: RevealProps["as"];
 }) {
-  const reduce = useReducedMotion();
   const MotionTag = motion[as] as typeof motion.div;
-  if (reduce) return <MotionTag className={className}>{children}</MotionTag>;
   return (
     <MotionTag
       className={className}

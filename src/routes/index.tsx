@@ -11,7 +11,7 @@ import {
   CheckCircle2,
   Mail,
 } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion } from "motion/react";
 import heroImage from "@/assets/hero.jpg";
 import { Reveal, Stagger, Item } from "@/components/reveal";
 
@@ -97,8 +97,8 @@ function Nav() {
 /* -------------------------------------------------------------------------- */
 
 function Hero() {
-  const reduce = useReducedMotion();
   const ease = [0.22, 1, 0.36, 1] as const;
+
   return (
     <section id="top" className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10">
@@ -108,7 +108,7 @@ function Hero() {
           width={1920}
           height={1080}
           className="h-full w-full object-cover opacity-95"
-          initial={reduce ? false : { scale: 1.08, opacity: 0 }}
+          initial={{ scale: 1.08, opacity: 0 }}
           animate={{ scale: 1, opacity: 0.95 }}
           transition={{ duration: 1.6, ease }}
         />
@@ -135,13 +135,13 @@ function Hero() {
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start px-6 pb-32 pt-28 md:pt-40">
         <motion.span
           className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur"
-          initial={reduce ? false : { opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease }}
         >
           <motion.span
             className="h-1.5 w-1.5 rounded-full bg-white/80"
-            animate={reduce ? undefined : { opacity: [0.5, 1, 0.5] }}
+            animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
           />
           Treinamentos corporativos · IA aplicada
@@ -149,7 +149,7 @@ function Hero() {
 
         <motion.h1
           className="mt-6 max-w-3xl font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl"
-          initial={reduce ? false : { opacity: 0, y: 24, filter: "blur(8px)" }}
+          initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.9, delay: 0.2, ease }}
         >
@@ -169,7 +169,7 @@ function Hero() {
 
         <motion.p
           className="mt-6 max-w-2xl text-base text-white/75 md:text-lg"
-          initial={reduce ? false : { opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.45, ease }}
         >
@@ -179,14 +179,14 @@ function Hero() {
 
         <motion.div
           className="mt-10 flex flex-wrap items-center gap-3"
-          initial={reduce ? false : { opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.6, ease }}
         >
           <motion.a
             href="#contato"
             className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-[oklch(0.22_0.08_265)] shadow-[var(--shadow-elegant)]"
-            whileHover={reduce ? undefined : { y: -2 }}
+            whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
           >
@@ -196,7 +196,7 @@ function Hero() {
           <motion.a
             href="#solucao"
             className="inline-flex h-11 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium text-white backdrop-blur"
-            whileHover={reduce ? undefined : { backgroundColor: "rgba(255,255,255,0.12)", y: -2 }}
+            whileHover={{ backgroundColor: "rgba(255,255,255,0.12)", y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
           >
