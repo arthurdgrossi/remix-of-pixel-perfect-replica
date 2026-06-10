@@ -1,5 +1,5 @@
 import { motion, type Variants } from "motion/react";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 type RevealProps = {
   children: ReactNode;
@@ -19,14 +19,21 @@ const baseVariants = (y: number): Variants => ({
   },
 });
 
+function useMounted() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted;
+}
+
 export function Reveal({ children, className, delay = 0, y = 24, as = "div" }: RevealProps) {
   const MotionTag = motion[as] as typeof motion.div;
+  const mounted = useMounted();
   return (
     <MotionTag
       className={className}
-      initial="hidden"
+      initial={mounted ? "hidden" : false}
       whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
+      viewport={{ once: true, margin: "-80px", amount: 0.2 }}
       variants={baseVariants(y)}
       transition={{ delay }}
     >
@@ -49,12 +56,13 @@ export function Stagger({
   as?: RevealProps["as"];
 }) {
   const MotionTag = motion[as] as typeof motion.div;
+  const mounted = useMounted();
   return (
     <MotionTag
       className={className}
-      initial="hidden"
+      initial={mounted ? "hidden" : false}
       whileInView="visible"
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, margin: "-60px", amount: 0.1 }}
       variants={{
         hidden: {},
         visible: { transition: { delayChildren, staggerChildren } },
