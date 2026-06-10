@@ -198,3 +198,61 @@ Used a **mixed reset** (not checkout/clone) specifically so no local file was ov
 - **Ignore local Claude config**: add `.claude/settings.local.json` (and optionally `.claude/settings.json`) to `.gitignore` so local harness config isn't accidentally committed later.
 - **`bun` PATH**: still requires `$env:Path = "$env:APPDATA\npm;$env:Path"` in fresh shells.
 - **Cloudflare build** path remains unverified (only the non-Nitro build was validated).
+
+---
+
+# Session Work Log — 2026-06-09 (UI/Design improvements)
+
+Implemented priorities 1–7 from the UI/Design Review Notes above; #8 (contact form) intentionally deferred with a documented plan. Visual identity preserved (dark/navy, Sora+Manrope, section structure, token system) — polished, not rebuilt.
+
+### Files inspected
+`src/routes/index.tsx`, `src/routes/__root.tsx`, `src/styles.css`, `src/components/reveal.tsx`, `src/components/ui/sheet.tsx`, `src/components/ui/button.tsx`, `components.json`, `src/assets/` (confirmed no `public/` dir existed).
+
+### Files changed / created
+- **`src/routes/__root.tsx`** — `lang="en"`→`pt-BR`; removed all Lovable boilerplate meta; real "IA Operacional" title/description/author/OG/Twitter (`summary_large_image`) + `og:image`/`theme-color`; favicon + apple-touch-icon links; Google Fonts `preconnect` + stylesheet (replaces dead `@font-face`); `<html suppressHydrationWarning>` + inline no-flash theme script.
+- **`src/styles.css`** — added `--highlight` token (light + dark) and `--color-highlight` theme mapping; removed the two rotted hardcoded `@font-face` blocks; added a `prefers-reduced-motion` CSS safety net (neutralizes CSS/tw-animate/Radix animations).
+- **`src/components/reveal.tsx`** — `Reveal`/`Stagger` now use Motion's `useReducedMotion`; render final visible state (no entrance) when reduced.
+- **`src/routes/index.tsx`** — wrapped page in `<MotionConfig reducedMotion="user">`; gated the Hero pulsing dot and Governance gradient loop on `useReducedMotion`; replaced magic `oklch(0.78 0.13 240)` usages with `text-highlight`/`bg-highlight` and a `color-mix(var(--highlight))` gradient stop; Hero stats grid `grid-cols-3`→`grid-cols-1 sm:grid-cols-3`; added a shared `focusRing` constant + `NAV_LINKS`; added accessible **mobile nav** (shadcn `Sheet`, all links + CTA, closes on link click, focus-trapped/restored); added focus-visible rings to all hand-rolled `<a>` buttons; added `ThemeToggle` to the nav.
+- **`src/components/theme-toggle.tsx`** *(new)* — sun/moon toggle; flips `dark` class + persists to localStorage; SSR-safe icon.
+- **`public/favicon.svg`** *(new)* — brand sparkle on navy gradient. **`public/og-image.jpg`** *(new)* — copied from `src/assets/hero.jpg` (1920×1080).
+- Route metadata in `index.tsx` title aligned to the "IA Operacional —" brand.
+
+### Improvements implemented (by priority)
+1. ✅ Language/SEO/branding — pt-BR, Lovable boilerplate gone, real brand metadata, favicon + OG image. Naming drift resolved toward the user-facing **"IA Operacional"** (HelpIA kept only as repo/codename).
+2. ✅ Reduced motion — `MotionConfig reducedMotion="user"` (disables transform/hover/entrance motion) + manual gates on the two infinite loops + CSS net. **Verified active** in the headless test (Motion logged the reduced-motion notice).
+3. ✅ Mobile nav — accessible `Sheet` menu; verified open, all links, close-on-click with focus returned to trigger.
+4. ✅ Tokens — `--highlight` promoted; `text-[oklch(...)]` magic values replaced. (Two unique decorative background gradients left as-is by design.)
+5. ✅ Responsive polish — hero stats stack on phones; mobile CTA moves into the menu (`sm:` inline otherwise).
+6. ✅ Focus-visible — shared `focusRing` (uses `--ring`) on nav, hero, offers, CTA anchors + toggle + menu trigger; verified ring on the sheet Close button.
+7. ✅ Light theme + toggle — stopped forcing dark; no-flash script + `suppressHydrationWarning`; defaults dark, persists choice. **Light mode verified to render coherently** (full-page screenshot).
+8. ⏸ Deferred — see below.
+
+### Commands executed
+```
+cp src/assets/hero.jpg public/og-image.jpg
+bunx tsc --noEmit          # EXIT 0 — no type errors
+bun run build              # EXIT 0 — client + SSR built (bundle grew ~67KB from Radix Sheet)
+bun dev                    # served http://localhost:8080
+bun lint                   # CRLF-only errors + 7 pre-existing react-refresh warnings (no new genuine issues)
+```
+Drove the running app with the chrome-devtools MCP: dark render, mobile resize (375px) + open/close menu, light-theme toggle. Screenshots saved in `.claude/skills/run-helpia-base/` (`after-dark.png`, `after-mobile-menu.png`, `after-light.png`).
+
+### Validation results
+- **TypeScript**: clean (`tsc --noEmit` exit 0).
+- **Build**: success (exit 0).
+- **Runtime console**: no errors. Found and **fixed** a pre-existing **404** — the hardcoded Sora `gstatic` woff2 URL was dead (headings were silently falling back to system-ui); now both fonts load 200 via the Google Fonts API. Remaining console output is benign (Vite debug, React DevTools info, and the reduced-motion notice that only appears because the test device requests reduced motion).
+- **Accessibility**: mobile menu keyboard/focus-trap works, closes on selection, focus restored to trigger; visible focus rings confirmed.
+- **Lint**: unchanged failure mode (CRLF line endings) — not introduced here; see blockers.
+
+### Errors / blockers
+- **`bun lint` red** = CRLF artifact only (no `.gitattributes`); my edits added more CRLF lines but zero new real lint problems. Fix = add `.gitattributes` (`* text=auto eol=lf`) + renormalize.
+- **Light theme is now reachable but only spot-verified** at desktop width on the landing route — worth a designer pass across breakpoints before promoting it heavily.
+
+### Intentionally deferred
+- **#8 Contact/lead form.** Kept the working `mailto:` CTA. A real form needs a delivery path that isn't configured (no email/backend). Clean implementation: a `createServerFn` POST handler + an email provider (Resend/SES) **or** a no-backend bridge that builds a prefilled `mailto:` from validated fields. Libraries are already installed (`react-hook-form`, `zod`, `@hookform/resolvers`, shadcn `form`/`input`/`textarea` + `sonner` for toasts). Deserves its own focused pass with success/error states.
+
+### Recommended next steps
+1. Add `.gitattributes` (`* text=auto eol=lf`) and renormalize to clear the CRLF lint wall.
+2. Designer QA of light theme across all breakpoints; consider persisting theme via cookie (so SSR can render the right theme and drop `suppressHydrationWarning`).
+3. Build the lead-capture form (#8) with a server function.
+4. Optionally self-host Sora/Manrope in `public/` to drop the runtime Google Fonts dependency entirely.

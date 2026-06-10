@@ -1,4 +1,4 @@
-import { motion, type Variants } from "motion/react";
+import { motion, useReducedMotion, type Variants } from "motion/react";
 import { useEffect, useState, type ReactNode } from "react";
 
 type RevealProps = {
@@ -28,11 +28,14 @@ function useMounted() {
 export function Reveal({ children, className, delay = 0, y = 24, as = "div" }: RevealProps) {
   const MotionTag = motion[as] as typeof motion.div;
   const mounted = useMounted();
+  const reduced = useReducedMotion();
+  // Reduced motion (or SSR): render in the final visible state, no entrance animation.
+  const animate = mounted && !reduced;
   return (
     <MotionTag
       className={className}
-      initial={mounted ? "hidden" : false}
-      whileInView="visible"
+      initial={animate ? "hidden" : false}
+      whileInView={animate ? "visible" : undefined}
       viewport={{ once: true, margin: "-80px", amount: 0.2 }}
       variants={baseVariants(y)}
       transition={{ delay }}
@@ -57,11 +60,13 @@ export function Stagger({
 }) {
   const MotionTag = motion[as] as typeof motion.div;
   const mounted = useMounted();
+  const reduced = useReducedMotion();
+  const animate = mounted && !reduced;
   return (
     <MotionTag
       className={className}
-      initial={mounted ? "hidden" : false}
-      whileInView="visible"
+      initial={animate ? "hidden" : false}
+      whileInView={animate ? "visible" : undefined}
       viewport={{ once: true, margin: "-60px", amount: 0.1 }}
       variants={{
         hidden: {},

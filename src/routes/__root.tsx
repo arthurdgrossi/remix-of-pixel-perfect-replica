@@ -77,16 +77,42 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "IA Operacional — Treinamento de IA aplicada para empresas" },
+      {
+        name: "description",
+        content:
+          "IA Operacional capacita equipes corporativas para usar Inteligência Artificial de forma prática, segura e orientada a resultados.",
+      },
+      { name: "author", content: "IA Operacional" },
+      { name: "theme-color", content: "#0f1b3d" },
+      { property: "og:site_name", content: "IA Operacional" },
+      { property: "og:title", content: "IA Operacional — Treinamento de IA aplicada para empresas" },
+      {
+        property: "og:description",
+        content:
+          "Capacitação prática de IA para empresas: produtividade, criação de soluções internas e desenvolvimento assistido.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { property: "og:locale", content: "pt_BR" },
+      { property: "og:image", content: "/og-image.jpg" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "IA Operacional — Treinamento de IA aplicada para empresas" },
+      {
+        name: "twitter:description",
+        content:
+          "Capacitação prática de IA para empresas: produtividade, criação de soluções internas e desenvolvimento assistido.",
+      },
+      { name: "twitter:image", content: "/og-image.jpg" },
     ],
     links: [
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "apple-touch-icon", href: "/favicon.svg" },
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Sora:wght@100..800&display=swap",
+      },
       {
         rel: "stylesheet",
         href: appCss,
@@ -99,10 +125,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+// Applies the persisted theme before first paint to avoid a flash. Defaults to
+// dark (the site's identity). Runs before hydration; <html> carries
+// suppressHydrationWarning so React tolerates the class it may have changed.
+const noFlashTheme = `(function(){try{var t=localStorage.getItem('theme');if(t==='light'){document.documentElement.classList.remove('dark');}}catch(e){}})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="pt-BR" className="dark" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: noFlashTheme }} />
         <HeadContent />
       </head>
       <body>

@@ -4,20 +4,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@layer base {
-  @font-face {
-    font-family: "Sora";
-    src: url("https://fonts.gstatic.com/s/sora/v12/xMQOuFFYT72X5wkB_18qmnndmSdSnk-NAQ.woff2") format("woff2");
-    font-weight: 100 800;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "Manrope";
-    src: url("https://fonts.gstatic.com/s/manrope/v15/xn7gYHE41ni1AdIRggexSg.woff2") format("woff2");
-    font-weight: 200 800;
-    font-display: swap;
-  }
-}
+/* Sora + Manrope are loaded via the Google Fonts CSS API in src/routes/__root.tsx
+   (preconnect + stylesheet). The previous hardcoded single-woff2 @font-face URLs
+   rotted (Sora 404'd, dropping headings to system-ui), so they were removed in
+   favor of the versioned API endpoint. */
 
 @theme inline {
   --font-display: "Sora", system-ui, sans-serif;
@@ -50,6 +40,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-highlight: var(--highlight);
 }
 
 :root {
@@ -73,6 +64,8 @@
 
   --accent: oklch(0.55 0.13 245);              /* steel blue #3b6fa0 */
   --accent-foreground: oklch(0.99 0.005 250);
+
+  --highlight: oklch(0.78 0.13 240);           /* bright sky-blue — headline accent / checks */
 
   --secondary: oklch(0.36 0.09 255);           /* mid navy #1e3a5f */
   --secondary-foreground: oklch(0.97 0.01 250);
@@ -106,6 +99,7 @@
   --primary-foreground: oklch(0.18 0.06 265);
   --accent: oklch(0.65 0.14 240);
   --accent-foreground: oklch(0.18 0.06 265);
+  --highlight: oklch(0.78 0.13 240);
   --secondary: oklch(0.30 0.08 260);
   --secondary-foreground: oklch(0.97 0.01 250);
   --muted: oklch(0.28 0.06 260);
@@ -137,5 +131,22 @@
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+  }
+}
+
+/* Respect users who ask for less motion: neutralize CSS animations/transitions
+   (tw-animate-css, Radix sheet, etc.). JS/Motion animations are gated separately
+   via Motion's useReducedMotion hook. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

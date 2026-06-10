@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import {
   ArrowRight,
   Brain,
@@ -10,21 +11,43 @@ import {
   Sparkles,
   CheckCircle2,
   Mail,
+  Menu,
 } from "lucide-react";
-import { motion } from "motion/react";
+import { motion, MotionConfig, useReducedMotion } from "motion/react";
 import heroImage from "@/assets/hero.jpg";
 import { Reveal, Stagger, Item } from "@/components/reveal";
+import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+
+const NAV_LINKS = [
+  { href: "#problema", label: "Problema" },
+  { href: "#solucao", label: "Solução" },
+  { href: "#ofertas", label: "Ofertas" },
+  { href: "#diferenciais", label: "Diferenciais" },
+];
+
+const focusRing =
+  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Treinamento de IA aplicada para equipes corporativas" },
+      { title: "IA Operacional — Treinamento de IA aplicada para equipes corporativas" },
       {
         name: "description",
         content:
           "Capacitação prática de IA para empresas: produtividade, criação de soluções internas e desenvolvimento assistido — com método, segurança e foco em resultado.",
       },
-      { property: "og:title", content: "Treinamento de IA aplicada para equipes corporativas" },
+      {
+        property: "og:title",
+        content: "IA Operacional — Treinamento de IA aplicada para equipes corporativas",
+      },
       {
         property: "og:description",
         content:
@@ -38,57 +61,102 @@ export const Route = createFileRoute("/")({
 
 function Landing() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <Nav />
-      <main>
-        <Hero />
-        <Problem />
-        <Levels />
-        <Offers />
-        <Differentials />
-        <Governance />
-        <CTA />
-      </main>
-      <Footer />
-    </div>
+    <MotionConfig reducedMotion="user">
+      <div className="min-h-screen bg-background text-foreground">
+        <Nav />
+        <main>
+          <Hero />
+          <Problem />
+          <Levels />
+          <Offers />
+          <Differentials />
+          <Governance />
+          <CTA />
+        </main>
+        <Footer />
+      </div>
+    </MotionConfig>
   );
 }
 
 /* -------------------------------------------------------------------------- */
 
 function Nav() {
-  const links = [
-    { href: "#problema", label: "Problema" },
-    { href: "#solucao", label: "Solução" },
-    { href: "#ofertas", label: "Ofertas" },
-    { href: "#diferenciais", label: "Diferenciais" },
-  ];
+  const [open, setOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
-        <a href="#top" className="flex items-center gap-2 font-display text-base font-semibold tracking-tight">
+        <a
+          href="#top"
+          className={`flex items-center gap-2 rounded-md font-display text-base font-semibold tracking-tight ${focusRing}`}
+        >
           <span className="grid h-7 w-7 place-items-center rounded-md bg-[image:var(--gradient-accent)] text-primary-foreground">
             <Sparkles className="h-4 w-4" />
           </span>
           IA Operacional
         </a>
+
         <nav className="hidden items-center gap-8 md:flex">
-          {links.map((l) => (
+          {NAV_LINKS.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              className={`rounded-sm text-sm text-muted-foreground transition-colors hover:text-foreground ${focusRing}`}
             >
               {l.label}
             </a>
           ))}
         </nav>
-        <a
-          href="#contato"
-          className="inline-flex h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-        >
-          Falar com a gente
-        </a>
+
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <a
+            href="#contato"
+            className={`hidden h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex ${focusRing}`}
+          >
+            Falar com a gente
+          </a>
+
+          {/* Mobile menu */}
+          <Sheet open={open} onOpenChange={setOpen}>
+            <SheetTrigger
+              aria-label="Abrir menu"
+              className={`inline-flex h-9 w-9 items-center justify-center rounded-md border border-border/60 bg-background/40 text-foreground/80 transition-colors hover:text-foreground hover:bg-accent/10 md:hidden ${focusRing}`}
+            >
+              <Menu className="h-5 w-5" />
+            </SheetTrigger>
+            <SheetContent side="right" aria-describedby={undefined} className="w-72 border-border">
+              <SheetHeader>
+                <SheetTitle className="flex items-center gap-2 font-display">
+                  <span className="grid h-7 w-7 place-items-center rounded-md bg-[image:var(--gradient-accent)] text-primary-foreground">
+                    <Sparkles className="h-4 w-4" />
+                  </span>
+                  IA Operacional
+                </SheetTitle>
+              </SheetHeader>
+              <nav className="mt-8 flex flex-col gap-1">
+                {NAV_LINKS.map((l) => (
+                  <a
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    className={`rounded-md px-3 py-3 text-base font-medium text-muted-foreground transition-colors hover:bg-accent/10 hover:text-foreground ${focusRing}`}
+                  >
+                    {l.label}
+                  </a>
+                ))}
+                <a
+                  href="#contato"
+                  onClick={() => setOpen(false)}
+                  className={`mt-4 inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 ${focusRing}`}
+                >
+                  Falar com a gente
+                </a>
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
     </header>
   );
@@ -98,6 +166,7 @@ function Nav() {
 
 function Hero() {
   const ease = [0.22, 1, 0.36, 1] as const;
+  const reduced = useReducedMotion();
 
   return (
     <section id="top" className="relative isolate overflow-hidden">
@@ -124,7 +193,7 @@ function Hero() {
           className="absolute inset-x-0 top-0 h-px"
           style={{
             background:
-              "linear-gradient(90deg, transparent, oklch(0.78 0.13 240 / 0.7), transparent)",
+              "linear-gradient(90deg, transparent, color-mix(in oklab, var(--highlight) 70%, transparent), transparent)",
           }}
           initial={{ opacity: 0, scaleX: 0.2 }}
           animate={{ opacity: 1, scaleX: 1 }}
@@ -141,7 +210,7 @@ function Hero() {
         >
           <motion.span
             className="h-1.5 w-1.5 rounded-full bg-white/80"
-            animate={{ opacity: [0.5, 1, 0.5] }}
+            animate={reduced ? undefined : { opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
           />
           Treinamentos corporativos · IA aplicada
@@ -154,11 +223,11 @@ function Hero() {
           transition={{ duration: 0.9, delay: 0.2, ease }}
         >
           IA que vira{" "}
-          <span className="relative inline-block text-[oklch(0.78_0.13_240)]">
+          <span className="relative inline-block text-highlight">
             resultado
             <motion.span
               aria-hidden
-              className="absolute inset-x-0 bottom-1 h-[3px] origin-left rounded-full bg-[oklch(0.78_0.13_240)]/40"
+              className="absolute inset-x-0 bottom-1 h-[3px] origin-left rounded-full bg-highlight/40"
               initial={{ scaleX: 0 }}
               animate={{ scaleX: 1 }}
               transition={{ duration: 0.8, delay: 1, ease }}
@@ -185,7 +254,7 @@ function Hero() {
         >
           <motion.a
             href="#contato"
-            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-[oklch(0.22_0.08_265)] shadow-[var(--shadow-elegant)]"
+            className={`group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-primary shadow-[var(--shadow-elegant)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
@@ -195,7 +264,7 @@ function Hero() {
           </motion.a>
           <motion.a
             href="#solucao"
-            className="inline-flex h-11 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium text-white backdrop-blur"
+            className={`inline-flex h-11 items-center justify-center rounded-md border border-white/25 bg-white/5 px-6 text-sm font-medium text-white backdrop-blur focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent`}
             whileHover={{ backgroundColor: "rgba(255,255,255,0.12)", y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
@@ -208,7 +277,7 @@ function Hero() {
           as="ul"
           delayChildren={0.85}
           staggerChildren={0.12}
-          className="mt-16 grid w-full max-w-3xl grid-cols-3 gap-6 border-t border-white/15 pt-8 text-white"
+          className="mt-16 grid w-full max-w-3xl grid-cols-1 gap-6 border-t border-white/15 pt-8 text-white sm:grid-cols-3 sm:gap-8"
         >
           <Item as="li">
             <Stat k="3" v="níveis de capacitação por perfil" />
@@ -466,8 +535,8 @@ function Offers() {
                   whileTap={{ scale: 0.97 }}
                   className={
                     o.featured
-                      ? "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-primary"
-                      : "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent"
+                      ? `group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-primary`
+                      : `group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent ${focusRing}`
                   }
                 >
                   Saber mais
@@ -552,6 +621,7 @@ function Differentials() {
 /* -------------------------------------------------------------------------- */
 
 function Governance() {
+  const reduced = useReducedMotion();
   const topics = [
     "Quais informações podem ou não ser inseridas em ferramentas externas",
     "Cuidado com dados pessoais, documentos internos e informações confidenciais",
@@ -570,9 +640,7 @@ function Governance() {
           backgroundImage:
             "radial-gradient(ellipse 60% 50% at 80% 0%, oklch(0.55 0.13 245 / 0.6), transparent 60%), radial-gradient(ellipse 50% 50% at 0% 100%, oklch(0.45 0.11 255 / 0.4), transparent 60%)",
         }}
-        animate={{
-          backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"],
-        }}
+        animate={reduced ? undefined : { backgroundPosition: ["0% 0%", "100% 100%", "0% 0%"] }}
         transition={{ duration: 22, repeat: Infinity, ease: "easeInOut" }}
       />
       <div className="relative mx-auto grid w-full max-w-6xl gap-16 px-6 md:grid-cols-12">
@@ -596,7 +664,7 @@ function Governance() {
               key={t}
               className="flex items-start gap-3 rounded-lg border border-white/10 bg-white/5 p-4 text-sm backdrop-blur transition-colors hover:border-white/25 hover:bg-white/10"
             >
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-[oklch(0.78_0.13_240)]" />
+              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-highlight" />
               <span className="text-white/90">{t}</span>
             </Item>
           ))}
@@ -628,7 +696,7 @@ function CTA() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
-            className="group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)]"
+            className={`group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] ${focusRing}`}
           >
             <Mail className="h-4 w-4" />
             Solicitar diagnóstico
@@ -639,7 +707,7 @@ function CTA() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
-            className="inline-flex h-12 items-center justify-center rounded-md border border-border bg-background px-7 text-sm font-medium text-foreground hover:border-accent hover:text-accent"
+            className={`inline-flex h-12 items-center justify-center rounded-md border border-border bg-background px-7 text-sm font-medium text-foreground hover:border-accent hover:text-accent ${focusRing}`}
           >
             Rever metodologia
           </motion.a>
