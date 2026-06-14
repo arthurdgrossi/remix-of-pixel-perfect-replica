@@ -85,21 +85,31 @@ function Landing() {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Brand lettermark — a navy "iA" tile with an accent underline. Uses the stable
- * `feature` tokens so it stays navy/white in both themes (unlike `primary`,
- * which inverts). Replaces the generic sparkle-in-a-gradient logo.
+ * Brand logo — the official "AI OPS" lockup (`public/logo.png`). It already
+ * carries the wordmark + tagline, so it stands alone (no adjacent text). Served
+ * statically from `public/` rather than imported, so it is SSR-safe and not
+ * hashed into the bundle.
+ *
+ * The source PNG has an opaque near-white background, so it is set on a white
+ * "logo chip" — a rounded, padded badge with a hairline ring — so it reads as
+ * an intentional lockup on both the dark (default) and light themes rather than
+ * a pasted white rectangle.
  */
-function BrandMark({ className }: { className?: string }) {
+function BrandLogo({ className }: { className?: string }) {
   return (
     <span
-      aria-hidden
       className={cn(
-        "relative grid h-7 w-7 place-items-center rounded-md bg-feature font-display text-[13px] font-bold leading-none tracking-tight text-feature-foreground",
+        "inline-flex items-center rounded-lg bg-white px-2 py-1 shadow-sm ring-1 ring-black/5",
         className,
       )}
     >
-      iA
-      <span className="absolute inset-x-[5px] bottom-[5px] h-[2px] rounded-full bg-feature-accent" />
+      <img
+        src="/logo.png"
+        alt="AI OPS — AI Operations"
+        width={577}
+        height={433}
+        className="h-6 w-auto select-none md:h-7"
+      />
     </span>
   );
 }
@@ -157,10 +167,10 @@ function Nav() {
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
         <a
           href="#top"
-          className={`flex items-center gap-2.5 rounded-md font-display text-base font-semibold tracking-tight ${focusRing}`}
+          aria-label="AI OPS — início"
+          className={`flex items-center rounded-md ${focusRing}`}
         >
-          <BrandMark />
-          IA Operacional
+          <BrandLogo />
         </a>
 
         <nav className="hidden items-center gap-8 md:flex">
@@ -194,9 +204,9 @@ function Nav() {
             </SheetTrigger>
             <SheetContent side="right" aria-describedby={undefined} className="w-72 border-border">
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2.5 font-display">
-                  <BrandMark />
-                  IA Operacional
+                <SheetTitle className="flex items-center">
+                  <BrandLogo />
+                  <span className="sr-only">IA Operacional</span>
                 </SheetTitle>
               </SheetHeader>
               <nav className="mt-8 flex flex-col gap-1">
@@ -795,9 +805,8 @@ function Footer() {
   return (
     <footer className="border-t border-border bg-surface py-12">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-6 px-6 text-sm text-muted-foreground md:flex-row md:items-center">
-        <div className="flex items-center gap-2.5 font-display font-semibold text-foreground">
-          <BrandMark />
-          IA Operacional
+        <div className="flex items-center text-foreground">
+          <BrandLogo />
         </div>
         <p>© {new Date().getFullYear()} · Treinamento de IA aplicada para empresas.</p>
       </div>

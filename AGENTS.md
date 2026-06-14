@@ -1,6 +1,6 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Codex (Codex.ai/code) when working with code in this repository.
 
 ## Commands
 
@@ -103,18 +103,18 @@ Cheapest wins, in order: (1) fix `lang` + metadata/branding, (2) add reduced-mot
 # Session Work Log — 2026-06-09 (run-skill-generator + bun install)
 
 ### What was inspected
-- Project state on resume: `node_modules` existed but was **partial** (200 entries; `vite`, `react-dom`, `lucide-react`, `date-fns` missing) from an earlier aborted install. No `.claude/skills/`, no `.claude/run.md`, no build output.
+- Project state on resume: `node_modules` existed but was **partial** (200 entries; `vite`, `react-dom`, `lucide-react`, `date-fns` missing) from an earlier aborted install. No `.Codex/skills/`, no `.Codex/run.md`, no build output.
 - Read the full UI: `src/routes/index.tsx`, `src/styles.css`, `src/components/reveal.tsx`, `src/routes/__root.tsx`, `components.json`, `package.json`, `vite.config.ts`, `bunfig.toml`.
 - Toolchain: Node v22.15.0 present; `bun` **not** installed/on PATH initially; Chrome + Edge present; no `chromium-cli`; not a git repo.
 
 ### What was changed / created
 - Installed **bun** globally (`npm install -g bun` → v1.3.14).
 - Completed **`bun install`** — all deps now present (verified `vite`, `react`, `react-dom`, `lucide-react`, `date-fns`, `@tanstack/react-start`, `node_modules/.bin/vite`).
-- Created the **run skill** at `.claude/skills/run-helpia-base/`:
+- Created the **run skill** at `.Codex/skills/run-helpia-base/`:
   - `SKILL.md` — agent-facing run/build/screenshot guide (every command in it was executed this session).
   - `smoke.mjs` — committed driver: asserts dev server HTTP 200 + SSR copy markers, then captures a full-page screenshot via system Chrome (runs under `node` or `bun`, no npm deps).
   - `screenshot-landing.png` — proof render of the running app.
-- Appended this log + the **UI / Design Review Notes** section above to `CLAUDE.md`.
+- Appended this log + the **UI / Design Review Notes** section above to `AGENTS.md`.
 
 ### Commands run (all succeeded unless noted)
 ```
@@ -123,7 +123,7 @@ $env:Path = "$env:APPDATA\npm;$env:Path" # bun.exe not on PATH otherwise
 bun install                              # 183 packages installed (completed the partial install)
 bun lint                                 # FAILS: 5567 prettier "Delete ␍" errors (CRLF — see below)
 bun dev                                  # Vite ready on http://localhost:8080/
-node .claude/skills/run-helpia-base/smoke.mjs   # ✓ 200 OK, SSR rendered, screenshot written
+node .Codex/skills/run-helpia-base/smoke.mjs   # ✓ 200 OK, SSR rendered, screenshot written
 ```
 Also drove the running app with the **chrome-devtools MCP** (`new_page` → `take_screenshot` → `list_console_messages`): full landing page rendered, **zero console messages**.
 
@@ -154,7 +154,7 @@ Synced `base/` with `https://github.com/arthurdgrossi/remix-of-pixel-perfect-rep
 - **Not a git repository** — no `.git` here or in the parent `HelpIA_MVP/`. So there was no branch, no remote, and *all* local files were effectively "uncommitted" (untracked). `gh` CLI not installed; used plain git over HTTPS. Git identity already set (Arthur Grossi / arthurgrossi1990@gmail.com).
 
 ### Remote configured
-- `origin` → `https://github.com/arthurdgrossi/remix-of-pixel-perfect-replica.git` (same Lovable project; remote top-level tree matched local source exactly, minus the local-only `CLAUDE.md` + `.claude/`).
+- `origin` → `https://github.com/arthurdgrossi/remix-of-pixel-perfect-replica.git` (same Lovable project; remote top-level tree matched local source exactly, minus the local-only `AGENTS.md` + `.Codex/`).
 
 ### Branch
 - `main` (created locally with `git init -b main`; remote had a single branch `main`).
@@ -167,19 +167,19 @@ git ls-remote --heads origin            # connectivity OK: main @ b8a0152
 git fetch origin                        # [new branch] main
 git reset --mixed origin/main           # adopt history WITHOUT touching working tree
 git diff --ignore-all-space src/routeTree.gen.ts   # inspected the one tracked diff
-git add CLAUDE.md .claude src/routeTree.gen.ts
-git restore --staged .claude/settings.json .claude/settings.local.json  # keep local-only
-git commit -m "Add CLAUDE.md notes + run-helpia-base skill; regen routeTree SSR types"
+git add AGENTS.md .Codex src/routeTree.gen.ts
+git restore --staged .Codex/settings.json .Codex/settings.local.json  # keep local-only
+git commit -m "Add AGENTS.md notes + run-helpia-base skill; regen routeTree SSR types"
 git push -u origin main                 # b8a0152..6fe7713
 git fetch origin && git rev-parse main origin/main   # aligned, 0/0
 ```
 Used a **mixed reset** (not checkout/clone) specifically so no local file was overwritten while adopting the fetched history.
 
 ### Files changed / pushed (commit `6fe7713`, 5 files, +359)
-- `CLAUDE.md` *(new on remote)* — review notes + work logs.
-- `.claude/skills/run-helpia-base/{SKILL.md, smoke.mjs, screenshot-landing.png}` *(new)* — the run skill.
+- `AGENTS.md` *(new on remote)* — review notes + work logs.
+- `.Codex/skills/run-helpia-base/{SKILL.md, smoke.mjs, screenshot-landing.png}` *(new)* — the run skill.
 - `src/routeTree.gen.ts` *(modified)* — see conflict note below.
-- **Intentionally NOT pushed:** `.claude/settings.json` and `.claude/settings.local.json` (Claude Code harness config / local permission grants — kept local, unstaged).
+- **Intentionally NOT pushed:** `.Codex/settings.json` and `.Codex/settings.local.json` (Codex harness config / local permission grants — kept local, unstaged).
 
 ### Conflicts found and how resolved
 - **No merge conflicts.** The only divergence in a tracked file was `src/routeTree.gen.ts`: the local copy had an extra auto-generated `declare module '@tanstack/react-start' { interface Register … }` SSR block, appended by the TanStack Router plugin when `bun dev` ran. This is generated output, not a manual edit, and is a strictly newer/more-complete generation — so it was kept and committed rather than reverted. `bun.lock` was unchanged (no dependency drift).
@@ -191,11 +191,11 @@ Used a **mixed reset** (not checkout/clone) specifically so no local file was ov
 - Tests → none configured.
 
 ### Final state
-- `main` = `origin/main` = `6fe7713` — **0 ahead / 0 behind, aligned.** Working tree clean except the two intentionally-local `.claude/settings*.json`.
+- `main` = `origin/main` = `6fe7713` — **0 ahead / 0 behind, aligned.** Working tree clean except the two intentionally-local `.Codex/settings*.json`.
 
 ### Blockers / manual steps still required
 - **CRLF line endings**: repo blobs are LF; Windows checkout uses CRLF, so git warns "LF will be replaced by CRLF" and `bun lint` is fully red. Add a `.gitattributes` (`* text=auto eol=lf`) and re-normalize to fix lint permanently — *not done here to avoid a whole-tree churn commit; recommended next.*
-- **Ignore local Claude config**: add `.claude/settings.local.json` (and optionally `.claude/settings.json`) to `.gitignore` so local harness config isn't accidentally committed later.
+- **Ignore local Codex config**: add `.Codex/settings.local.json` (and optionally `.Codex/settings.json`) to `.gitignore` so local harness config isn't accidentally committed later.
 - **`bun` PATH**: still requires `$env:Path = "$env:APPDATA\npm;$env:Path"` in fresh shells.
 - **Cloudflare build** path remains unverified (only the non-Nitro build was validated).
 
@@ -235,7 +235,7 @@ bun run build              # EXIT 0 — client + SSR built (bundle grew ~67KB fr
 bun dev                    # served http://localhost:8080
 bun lint                   # CRLF-only errors + 7 pre-existing react-refresh warnings (no new genuine issues)
 ```
-Drove the running app with the chrome-devtools MCP: dark render, mobile resize (375px) + open/close menu, light-theme toggle. Screenshots saved in `.claude/skills/run-helpia-base/` (`after-dark.png`, `after-mobile-menu.png`, `after-light.png`).
+Drove the running app with the chrome-devtools MCP: dark render, mobile resize (375px) + open/close menu, light-theme toggle. Screenshots saved in `.Codex/skills/run-helpia-base/` (`after-dark.png`, `after-mobile-menu.png`, `after-light.png`).
 
 ### Validation results
 - **TypeScript**: clean (`tsc --noEmit` exit 0).
@@ -256,132 +256,3 @@ Drove the running app with the chrome-devtools MCP: dark render, mobile resize (
 2. Designer QA of light theme across all breakpoints; consider persisting theme via cookie (so SSR can render the right theme and drop `suppressHydrationWarning`).
 3. Build the lead-capture form (#8) with a server function.
 4. Optionally self-host Sora/Manrope in `public/` to drop the runtime Google Fonts dependency entirely.
-
----
-
-# Session Work Log — 2026-06-10 (De-"AI-look" pass + dark-mode contrast fixes)
-
-Goal: make the landing page feel intentionally/manually designed (less templated/AI-generated) and fix dark-mode readability. Visual identity preserved (navy/corporate, Sora+Manrope, same seven sections, OKLCH token system) — refined, not rebuilt.
-
-### Files inspected
-`src/routes/index.tsx`, `src/styles.css`, `src/routes/__root.tsx`, `src/components/reveal.tsx`, `src/components/theme-toggle.tsx`, `src/lib/utils.ts`, `src/assets/` + `public/` (hero.jpg, favicon.svg, og-image.jpg present).
-
-### Root-cause bug found: `--primary` inverts between themes
-`--primary` is deep navy in `:root` (light) but **near-white** (`oklch(0.97 …)`) in `.dark`. Several sections used `bg-primary` to mean "dark navy panel" and then hardcoded **`text-white/...`** content inside. In dark mode (the site default) those became **white-on-white → invisible**:
-- **Governance** band (`bg-primary` + white heading/body/topic cards) — whole section unreadable in dark.
-- **Featured Offer** card "Workshop Prático" (`bg-primary` + white tag/bullets, `bg-white text-primary` button → white-on-white label).
-- **Hero** primary CTA (`text-primary` label on a white button → invisible in dark).
-
-This is the classic "Lovable color choice caused poor contrast" the task flagged.
-
-### Color / token fixes (`src/styles.css`)
-- Added a **stable "ink" feature surface** token set that stays deep navy in **both** themes, so panels meant to read white-on-navy never invert: `--feature`, `--feature-foreground`, `--feature-muted`, `--feature-border`, `--feature-accent` (+ `--color-feature*` mappings in `@theme inline`). In `.dark` the band is lifted slightly (`--feature: 0.245`) with a touch more border so it still reads elevated.
-- Bumped dark **`--muted-foreground`** `0.70 → 0.745` for small body/caption legibility on dark cards.
-
-### UI changes (`src/routes/index.tsx`)
-De-templating (less "AI look"):
-- **New `BrandMark`** — a navy "iA" lettermark tile with an accent underline, replacing the generic **Sparkles-in-a-gradient-box** logo (used in Nav, mobile sheet, Footer).
-- **New `SectionLabel`** — one editorial eyebrow system (tabular index number `01`–`06` + hairline rule + tracked label) replacing the five near-identical `uppercase tracking` eyebrows. `tone="feature"` variant for the dark band.
-- **Restrained icon treatment** — every icon moved off the filled `--gradient-accent` square to a consistent bordered `border-accent/25 bg-accent/[0.08] text-accent` chip; removed the cutesy `group-hover:scale-110 group-hover:rotate-3` spins. Card hover lift softened `-6 → -4`.
-- **Hero**: removed the infinite **pulsing dot** (now a static glow-ring dot); tighter heading leading; stat grid gains left rule dividers; caption contrast `/65 → /70`.
-- **Problem**: numbered list items (`01…06`) + sticky intro column for rhythm.
-- **Levels**: icon + level tag on one row; body text moved to `text-muted-foreground` (was opacity-hacked `card-foreground/80`); tool tags now bordered chips.
-- **Differentials**: `sm:grid-cols-2` added (was 1→3 only); same restrained icon chip.
-- **Governance**: replaced the **22s looping radial-gradient glow** with a single static soft top-edge glow + hairline (honours "avoid unnecessary glow"); all content re-tokenized to `feature-*`.
-
-Dark-mode contrast fixes (the bug above):
-- Governance + featured Offer card → `bg-feature text-feature-foreground` (stable navy), inner text → `text-feature-muted` / `text-feature-foreground/90`, checks → `text-feature-accent`.
-- Hero CTA + featured Offer button label → `text-feature` (stable navy on the white button) instead of inverting `text-primary`.
-- Replaced opacity-hacked body text (`card-foreground/80`, `/85`, `text-white/75`) with semantic tokens throughout.
-
-### Commands executed
-```
-bunx tsc --noEmit        # EXIT 0 (run twice — before and after the hydration fix)
-bun run build            # EXIT 0 — client + SSR built (dist/ written)
-bun dev                  # served http://localhost:8080
-bun lint                 # CRLF-only errors + 7 pre-existing react-refresh warnings (no new genuine issues)
-```
-Drove the running app with the chrome-devtools MCP at 1280px (dark + light, full-page), 390px mobile, and zoomed Offers/Governance. Screenshots in `.claude/skills/run-helpia-base/`: `redesign-dark-full.png`, `redesign-dark-offers.png`, `redesign-dark-gov.png`, `redesign-light-full.png`, `redesign-mobile.png`.
-
-### Validation results
-- **TypeScript**: clean (`tsc --noEmit` exit 0).
-- **Build**: success (exit 0).
-- **Runtime console**: clean. Caught & **fixed a hydration mismatch** I introduced — the hero dot's static `box-shadow` was gated on `useReducedMotion()` (null on SSR, true on the reduced-motion test client); made it unconditional (it's decoration, not motion) and dropped the now-unused hook. Only remaining console line is the benign Motion reduced-motion notice (test device requests it).
-- **Visual**: Governance band and featured card now fully readable in **dark** mode (previously invisible); in **light** mode both read as deliberate dark contrast bands. Mobile nav/hero intact.
-- **Lint**: unchanged failure mode — 4949 CRLF `prettier/prettier` errors + 7 react-refresh warnings; **0 new genuine issues**.
-
-### Remaining UI / design issues
-- **CRLF lint wall** persists (no `.gitattributes`) — cosmetic, unchanged.
-- In **dark** mode the featured Offer card sits only slightly above its neighbours (feature 0.245 vs card 0.22); it's distinguished by ring + badge dot + white button. Fine, but a stronger differentiator (e.g. accent ring) is an option.
-- Contact CTA is still **`mailto:`** only — real lead form still deferred (#8 from prior log).
-- Theme still defaults dark with `suppressHydrationWarning`; a cookie-driven SSR theme would let that be dropped.
-
-### Recommended next improvements
-1. `.gitattributes` (`* text=auto eol=lf`) + renormalize to clear the CRLF lint noise.
-2. Build the lead-capture form (server function + provider) to replace the bare `mailto:`.
-3. Cookie-based theme so SSR renders the chosen theme (drop `suppressHydrationWarning`).
-4. Consider a distinct OG/social image (currently the hero photo) and self-hosting fonts.
-
----
-
-# Session Work Log — 2026-06-10 (Official "AI OPS" logo wired into the frontend)
-
-Replaced the hand-rolled `iA` lettermark with the official **"AI OPS"** logo image
-(`docs/logo_png.png`) across the whole site, per user request. Ran + verified in the
-real app via the chrome-devtools MCP.
-
-### What was inspected
-- `docs/` folder (the repo had a new `base/docs/` with two brand files): **`logo_png.png`**
-  and `logo_normal.png` — both **1447×1087** horizontal lockups (hex icon + "AI OPS"
-  wordmark + "AI OPERATIONS" tagline). `logo_normal.png` has the navy background baked in;
-  `logo_png.png` is the version the user asked for.
-- `src/routes/index.tsx` — the old `BrandMark` lettermark component and its **3 usages**
-  (Nav, mobile `Sheet` header, Footer), each rendered as `<BrandMark /> + "IA Operacional"` text.
-
-### Key finding — `logo_png.png` is **white-background, not transparent**
-The faint checkerboard in the image preview is a *subtle grid texture baked onto white*, not
-alpha. Pixel sampling (`System.Drawing.Bitmap.GetPixel`) confirmed the corner is opaque
-near-white (`A=255 R=253 G=254 B=254`); the `<img>`/parent backgrounds are transparent, so the
-white came from the PNG itself. Dropped onto the dark-default nav it rendered as a raw white
-sticker. → Resolved by presenting it on a **white "logo chip"** (rounded badge, padding,
-`shadow-sm` + `ring-1 ring-black/5`) so the white reads as intentional on **both** themes.
-(`logo_normal.png`, the navy version, is the alternative if a chip-less look on dark is ever wanted.)
-
-### Files changed / created
-- **`public/logo.png`** *(new)* — copied from `docs/logo_png.png`. Served statically at `/logo.png`
-  (SSR-safe, not bundle-hashed); confirmed emitted to `dist/client/logo.png` by the build.
-- **`src/routes/index.tsx`**:
-  - Removed `BrandMark`; added **`BrandLogo`** — `<img src="/logo.png" alt="AI OPS — AI Operations">`
-    (`width/height` set to intrinsic 1447×1087 to reserve layout) inside the white logo chip,
-    `h-6 md:h-7`.
-  - **Nav** brand link: now just `<BrandLogo />` (logo carries the wordmark, so the adjacent
-    "IA Operacional" text was dropped); added `aria-label="AI OPS — início"`.
-  - **Mobile `Sheet`** title: `<BrandLogo />` + an `sr-only` "IA Operacional" for the accessible name.
-  - **Footer**: `<BrandLogo />` replacing the mark+text.
-  - `Sparkles` import is still used (a Differentials card icon) — left intact.
-
-### Commands executed
-```
-Copy-Item docs\logo_png.png public\logo.png      # 868 KB
-bunx tsc --noEmit                                # EXIT 0
-bun run build                                    # EXIT 0 — dist/client/logo.png present
-node .claude/skills/run-helpia-base/smoke.mjs    # ✓ 200, SSR markers found, screenshot written
-```
-Drove the live app with the chrome-devtools MCP (`new_page` → screenshots, `evaluate_script` to
-inspect computed styles + toggle theme): logo verified in Nav + Footer on **dark** (clean white
-badge) and **light** (hairline ring keeps it off the near-white nav). Also confirmed the earlier
-"blank hero" in the one-shot smoke screenshot is just `<Reveal>` entrance-animation timing — the
-hero copy ("IA que vira **resultado**…") paints correctly in the interactive driver.
-
-### Validation results
-- **TypeScript**: clean (exit 0). No dangling `BrandMark` references.
-- **Build**: success (exit 0); logo asset copied into `dist/client/`.
-- **Visual**: logo chip renders correctly in both themes, Nav + mobile sheet + Footer.
-
-### Notes / not done
-- **Brand drift remains intentional-but-mixed**: the *image* says "AI OPS / AI OPERATIONS" while
-  surrounding copy/metadata still says **"IA Operacional"** (page `<title>`, footer line, sr-only
-  label, `__root.tsx` OG/title). Not reconciled here — flag for the user if a single brand name is wanted.
-- **favicon/OG untouched** — `public/favicon.svg` (the old sparkle mark) and `og-image.jpg` still in
-  place; the task scoped to the in-page system logo. Swapping favicon to the AI OPS mark is a clean follow-up.
-- `bun lint` unchanged (CRLF wall); no new genuine issues.
