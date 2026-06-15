@@ -154,7 +154,7 @@ function Nav() {
           <ThemeToggle />
           <a
             href="#contato"
-            className={`hidden h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex ${focusRing}`}
+            className={`hidden h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover sm:inline-flex ${focusRing}`}
           >
             Falar com a gente
           </a>
@@ -188,7 +188,7 @@ function Nav() {
                 <a
                   href="#contato"
                   onClick={() => setOpen(false)}
-                  className={`mt-4 inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 ${focusRing}`}
+                  className={`mt-4 inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover ${focusRing}`}
                 >
                   Falar com a gente
                 </a>
@@ -298,7 +298,7 @@ function Hero() {
         >
           <motion.a
             href="#contato"
-            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-feature shadow-[var(--shadow-elegant)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
@@ -543,7 +543,7 @@ function Offers() {
                 transition={{ type: "spring", stiffness: 300, damping: 24 }}
                 className={
                   o.featured
-                    ? "relative flex h-full flex-col rounded-xl bg-feature p-8 text-feature-foreground shadow-[var(--shadow-elegant)] ring-1 ring-feature-border md:-mt-4"
+                    ? "relative flex h-full flex-col rounded-xl bg-feature p-8 text-feature-foreground shadow-[var(--shadow-elegant)] ring-1 ring-primary/30 md:-mt-4"
                     : "relative flex h-full flex-col rounded-xl border border-border bg-card p-8 shadow-[var(--shadow-card)]"
                 }
               >
@@ -588,7 +588,7 @@ function Offers() {
                   whileTap={{ scale: 0.97 }}
                   className={
                     o.featured
-                      ? "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-feature transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-feature"
+                      ? "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-feature"
                       : `group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent ${focusRing}`
                   }
                 >
@@ -756,7 +756,7 @@ function CTA() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
-            className={`group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] ${focusRing}`}
+            className={`group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-colors hover:bg-primary-hover ${focusRing}`}
           >
             <Mail className="h-4 w-4" />
             Solicitar diagnóstico
