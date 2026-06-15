@@ -77,16 +77,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "IA Operacional — Treinamento de IA aplicada para empresas" },
+      { title: "AI OPS — Treinamento de IA aplicada para empresas" },
       {
         name: "description",
         content:
-          "IA Operacional capacita equipes corporativas para usar Inteligência Artificial de forma prática, segura e orientada a resultados.",
+          "A AI OPS capacita equipes corporativas para usar Inteligência Artificial de forma prática, segura e orientada a resultados.",
       },
-      { name: "author", content: "IA Operacional" },
+      { name: "author", content: "AI OPS" },
       { name: "theme-color", content: "#0f1b3d" },
-      { property: "og:site_name", content: "IA Operacional" },
-      { property: "og:title", content: "IA Operacional — Treinamento de IA aplicada para empresas" },
+      { property: "og:site_name", content: "AI OPS" },
+      { property: "og:title", content: "AI OPS — Treinamento de IA aplicada para empresas" },
       {
         property: "og:description",
         content:
@@ -96,7 +96,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:locale", content: "pt_BR" },
       { property: "og:image", content: "/og-image.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "IA Operacional — Treinamento de IA aplicada para empresas" },
+      { name: "twitter:title", content: "AI OPS — Treinamento de IA aplicada para empresas" },
       {
         name: "twitter:description",
         content:
@@ -105,13 +105,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:image", content: "/og-image.jpg" },
     ],
     links: [
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "apple-touch-icon", href: "/favicon.svg" },
+      { rel: "icon", href: "/favicon.png", type: "image/png" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Sora:wght@100..800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&family=Hanken+Grotesk:wght@300..800&family=JetBrains+Mono:wght@400..600&display=swap",
       },
       {
         rel: "stylesheet",

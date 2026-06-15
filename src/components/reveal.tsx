@@ -6,7 +6,7 @@ type RevealProps = {
   className?: string;
   delay?: number;
   y?: number;
-  as?: "div" | "section" | "article" | "li" | "ul" | "header";
+  as?: "div" | "section" | "article" | "li" | "ul" | "ol" | "header";
 };
 
 const baseVariants = (y: number): Variants => ({

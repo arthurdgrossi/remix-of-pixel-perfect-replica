@@ -25,7 +25,7 @@ const shot = join(here, "screenshot-landing.png");
 
 // Strings that must appear in the server-rendered HTML.
 const MUST_CONTAIN = [
-  "IA Operacional",            // brand (Nav + Footer)
+  "AI OPS",                    // brand (Nav + Footer)
   "dentro da sua empresa.",    // hero headline tail
   "Três níveis de capacitação", // Levels section heading
 ];

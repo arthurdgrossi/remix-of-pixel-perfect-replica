@@ -4,14 +4,16 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Sora + Manrope are loaded via the Google Fonts CSS API in src/routes/__root.tsx
-   (preconnect + stylesheet). The previous hardcoded single-woff2 @font-face URLs
-   rotted (Sora 404'd, dropping headings to system-ui), so they were removed in
-   favor of the versioned API endpoint. */
+/* Type system ("Operational Spec-Sheet"): Bricolage Grotesque (display) +
+   Hanken Grotesk (body) + JetBrains Mono (technical labels / index numbers /
+   stats / chips). Loaded via the Google Fonts CSS API in src/routes/__root.tsx
+   (preconnect + stylesheet). The mono is the editorial signature that pulls the
+   page away from the generic "geometric-sans AI" look. */
 
 @theme inline {
-  --font-display: "Sora", system-ui, sans-serif;
-  --font-sans: "Manrope", system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", system-ui, sans-serif;
+  --font-sans: "Hanken Grotesk", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", monospace;
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -151,8 +153,19 @@
 
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-display);
-    letter-spacing: -0.02em;
+    letter-spacing: -0.015em;
   }
+}
+
+/* Technical label utility — the recurring mono "spec" treatment used by section
+   eyebrows, the hero tag and stat captions. Keeps the engineered voice
+   consistent in one place. */
+@utility spec-label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
 }
 
 /* Respect users who ask for less motion: neutralize CSS animations/transitions

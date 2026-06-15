@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, type ReactNode } from "react";
+import { useState } from "react";
 import {
   ArrowRight,
   Brain,
@@ -16,6 +16,8 @@ import {
 import { motion, MotionConfig } from "motion/react";
 import heroImage from "@/assets/hero.jpg";
 import { Reveal, Stagger, Item } from "@/components/reveal";
+import { SectionLabel } from "@/components/section-label";
+import { WhyAiProjectsFail } from "@/components/why-ai-projects-fail";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
 import {
@@ -28,6 +30,7 @@ import {
 
 const NAV_LINKS = [
   { href: "#problema", label: "Problema" },
+  { href: "#por-que-falham", label: "Por que falham" },
   { href: "#solucao", label: "Solução" },
   { href: "#ofertas", label: "Ofertas" },
   { href: "#diferenciais", label: "Diferenciais" },
@@ -39,7 +42,7 @@ const focusRing =
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "IA Operacional — Treinamento de IA aplicada para equipes corporativas" },
+      { title: "AI OPS — Treinamento de IA aplicada para equipes corporativas" },
       {
         name: "description",
         content:
@@ -47,7 +50,7 @@ export const Route = createFileRoute("/")({
       },
       {
         property: "og:title",
-        content: "IA Operacional — Treinamento de IA aplicada para equipes corporativas",
+        content: "AI OPS — Treinamento de IA aplicada para equipes corporativas",
       },
       {
         property: "og:description",
@@ -68,6 +71,7 @@ function Landing() {
         <main>
           <Hero />
           <Problem />
+          <WhyAiProjectsFail />
           <Levels />
           <Offers />
           <Differentials />
@@ -85,75 +89,36 @@ function Landing() {
 /* -------------------------------------------------------------------------- */
 
 /**
- * Brand logo — the official "AI OPS" lockup (`public/logo.png`). It already
- * carries the wordmark + tagline, so it stands alone (no adjacent text). Served
- * statically from `public/` rather than imported, so it is SSR-safe and not
- * hashed into the bundle.
+ * Brand logo — the official "AI OPS" lockup (`public/logo.png`), cropped tight to
+ * its artwork (418×138) so it reads large at small heights instead of floating in
+ * empty canvas padding. It carries the wordmark + tagline, so it stands alone (no
+ * adjacent text). Served statically from `public/` (SSR-safe, not hashed).
  *
- * The source PNG has an opaque near-white background, so it is set on a white
- * "logo chip" — a rounded, padded badge with a hairline ring — so it reads as
- * an intentional lockup on both the dark (default) and light themes rather than
- * a pasted white rectangle.
+ * The artwork sits on an opaque near-white background, so it is set on a white
+ * "logo chip" — a rounded, padded badge with a hairline ring — reading as an
+ * intentional lockup on both the dark (default) and light themes rather than a
+ * pasted white rectangle. `size="lg"` is used in the footer for more presence.
  */
-function BrandLogo({ className }: { className?: string }) {
+function BrandLogo({ className, size = "md" }: { className?: string; size?: "md" | "lg" }) {
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-lg bg-white px-2 py-1 shadow-sm ring-1 ring-black/5",
+        "inline-flex items-center rounded-xl bg-white shadow-sm ring-1 ring-black/5",
+        size === "lg" ? "px-3.5 py-2" : "px-3 py-1.5",
         className,
       )}
     >
       <img
         src="/logo.png"
         alt="AI OPS — AI Operations"
-        width={577}
-        height={433}
-        className="h-6 w-auto select-none md:h-7"
+        width={418}
+        height={138}
+        className={cn(
+          "w-auto select-none",
+          size === "lg" ? "h-9 md:h-10" : "h-8 md:h-9",
+        )}
       />
     </span>
-  );
-}
-
-/**
- * Editorial section eyebrow: a tabular index number + hairline rule + label.
- * One consistent system across every section, which reads as deliberate rather
- * than the default "uppercase tracked label" repeated five times.
- */
-function SectionLabel({
-  index,
-  children,
-  className,
-  tone = "default",
-}: {
-  index: string;
-  children: ReactNode;
-  className?: string;
-  tone?: "default" | "feature";
-}) {
-  const onFeature = tone === "feature";
-  return (
-    <div className={cn("flex items-center gap-3", className)}>
-      <span
-        className={cn(
-          "font-display text-sm font-semibold tabular-nums",
-          onFeature ? "text-feature-accent" : "text-accent",
-        )}
-      >
-        {index}
-      </span>
-      <span
-        aria-hidden
-        className={cn("h-px w-8", onFeature ? "bg-white/20" : "bg-border")}
-      />
-      <span
-        className={cn(
-          "text-[11px] font-semibold uppercase tracking-[0.22em]",
-          onFeature ? "text-feature-muted" : "text-muted-foreground",
-        )}
-      >
-        {children}
-      </span>
-    </div>
   );
 }
 
@@ -206,7 +171,7 @@ function Nav() {
               <SheetHeader>
                 <SheetTitle className="flex items-center">
                   <BrandLogo />
-                  <span className="sr-only">IA Operacional</span>
+                  <span className="sr-only">AI OPS</span>
                 </SheetTitle>
               </SheetHeader>
               <nav className="mt-8 flex flex-col gap-1">
@@ -261,6 +226,16 @@ function Hero() {
               "linear-gradient(180deg, oklch(0.18 0.06 265 / 0.55) 0%, oklch(0.18 0.06 265 / 0.85) 70%, var(--background) 100%)",
           }}
         />
+        {/* Engineered grid texture — atmosphere/depth instead of a flat overlay. */}
+        <div
+          aria-hidden
+          className="absolute inset-0 opacity-[0.18] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,black,transparent_75%)]"
+          style={{
+            backgroundImage:
+              "linear-gradient(to right, oklch(1 0 0 / 0.5) 1px, transparent 1px), linear-gradient(to bottom, oklch(1 0 0 / 0.5) 1px, transparent 1px)",
+            backgroundSize: "64px 64px",
+          }}
+        />
         <motion.div
           aria-hidden
           className="absolute inset-x-0 top-0 h-px"
@@ -275,23 +250,18 @@ function Hero() {
       </div>
 
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start px-6 pb-28 pt-28 md:pb-36 md:pt-40">
-        <motion.span
-          className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-3 py-1 text-xs font-medium text-white/90 backdrop-blur"
+        <motion.div
+          className="flex items-center gap-3 text-white/85"
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.1, ease }}
         >
-          <span
-            className="h-1.5 w-1.5 rounded-full bg-feature-accent"
-            style={{
-              boxShadow: "0 0 0 3px color-mix(in oklab, var(--feature-accent) 25%, transparent)",
-            }}
-          />
-          Treinamentos corporativos · IA aplicada
-        </motion.span>
+          <span aria-hidden className="h-px w-8 bg-feature-accent" />
+          <span className="spec-label">Treinamento corporativo · IA aplicada</span>
+        </motion.div>
 
         <motion.h1
-          className="mt-7 max-w-3xl font-display text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-5xl md:text-6xl"
+          className="mt-7 max-w-4xl font-display text-[2.65rem] font-semibold leading-[1.02] tracking-[-0.03em] text-white sm:text-6xl md:text-7xl"
           initial={{ opacity: 0, y: 24, filter: "blur(8px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.9, delay: 0.2, ease }}
@@ -371,8 +341,10 @@ function Hero() {
 function Stat({ k, v }: { k: string; v: string }) {
   return (
     <div className="sm:border-l sm:border-white/15 sm:pl-5">
-      <dt className="font-display text-3xl font-semibold tracking-tight md:text-4xl">{k}</dt>
-      <dd className="mt-1.5 text-sm leading-snug text-white/70">{v}</dd>
+      <dt className="font-mono text-3xl font-medium tabular-nums tracking-tight text-white md:text-4xl">
+        {k}
+      </dt>
+      <dd className="mt-2 text-sm leading-snug text-white/70">{v}</dd>
     </div>
   );
 }
@@ -408,7 +380,7 @@ function Problem() {
               key={t}
               className="flex items-start gap-4 rounded-lg border border-border bg-card p-5 transition-colors hover:border-accent/40"
             >
-              <span className="mt-0.5 font-display text-sm font-semibold tabular-nums text-accent/70">
+              <span className="mt-0.5 font-mono text-sm font-medium tabular-nums text-accent/80">
                 {String(i + 1).padStart(2, "0")}
               </span>
               <span className="text-sm leading-relaxed text-card-foreground md:text-base">{t}</span>
@@ -454,7 +426,7 @@ function Levels() {
     <section id="solucao" className="py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal className="mx-auto max-w-2xl text-center">
-          <SectionLabel index="02" className="justify-center">
+          <SectionLabel index="03" className="justify-center">
             A metodologia
           </SectionLabel>
           <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
@@ -466,36 +438,42 @@ function Levels() {
           </p>
         </Reveal>
 
-        <Stagger className="mt-16 grid gap-6 md:grid-cols-3" staggerChildren={0.12}>
-          {levels.map(({ icon: Icon, ...l }) => (
-            <Item key={l.tag} as="article" className="h-full">
-              <motion.div
-                whileHover={{ y: -4 }}
-                transition={{ type: "spring", stiffness: 300, damping: 24 }}
-                className="group relative flex h-full flex-col rounded-xl border border-border bg-card p-7 shadow-[var(--shadow-card)] transition-[border-color,box-shadow] hover:border-accent/40 hover:shadow-[var(--shadow-elegant)]"
-              >
-                <div className="mb-6 flex items-center justify-between">
-                  <div className="inline-flex h-11 w-11 items-center justify-center rounded-lg border border-accent/25 bg-accent/[0.08] text-accent transition-colors group-hover:border-accent/50">
-                    <Icon className="h-5 w-5" />
-                  </div>
-                  <span className="font-display text-sm font-semibold uppercase tracking-[0.16em] text-accent">
-                    {l.tag}
-                  </span>
-                </div>
-                <h3 className="font-display text-xl font-semibold tracking-tight">{l.title}</h3>
-                <p className="mt-1.5 text-xs font-medium text-muted-foreground">{l.audience}</p>
-                <p className="mt-4 flex-1 text-sm leading-relaxed text-muted-foreground">{l.body}</p>
-                <div className="mt-6 flex flex-wrap gap-1.5 border-t border-border pt-5">
-                  {l.tools.map((t) => (
-                    <span
-                      key={t}
-                      className="rounded-md border border-border bg-muted/60 px-2 py-1 text-[11px] font-medium text-muted-foreground transition-colors group-hover:border-accent/30 group-hover:text-foreground"
-                    >
-                      {t}
+        <Stagger as="ol" className="mt-16 border-t border-border" staggerChildren={0.1}>
+          {levels.map(({ icon: Icon, ...l }, i) => (
+            <Item as="li" key={l.tag} className="group border-b border-border">
+              <div className="grid items-start gap-x-10 gap-y-5 py-9 md:grid-cols-12 md:py-12">
+                <div className="md:col-span-5">
+                  <div className="flex items-center gap-4">
+                    <span className="font-mono text-sm font-medium tabular-nums text-accent">
+                      {String(i + 1).padStart(2, "0")}
+                      <span className="text-muted-foreground/60"> / {String(levels.length).padStart(2, "0")}</span>
                     </span>
-                  ))}
+                    <span className="spec-label text-muted-foreground">{l.tag}</span>
+                  </div>
+                  <h3 className="mt-5 flex items-center gap-3 font-display text-2xl font-semibold tracking-tight">
+                    <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-accent/25 bg-accent/[0.08] text-accent transition-colors group-hover:border-accent/50">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    {l.title}
+                  </h3>
+                  <p className="mt-3 text-sm font-medium text-muted-foreground">{l.audience}</p>
                 </div>
-              </motion.div>
+                <div className="md:col-span-7 md:pt-1">
+                  <p className="max-w-xl text-sm leading-relaxed text-muted-foreground md:text-base">
+                    {l.body}
+                  </p>
+                  <div className="mt-6 flex flex-wrap gap-1.5">
+                    {l.tools.map((t) => (
+                      <span
+                        key={t}
+                        className="rounded-md border border-border bg-muted/40 px-2 py-1 font-mono text-[11px] text-muted-foreground transition-colors group-hover:border-accent/30 group-hover:text-foreground"
+                      >
+                        {t}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </Item>
           ))}
         </Stagger>
@@ -546,7 +524,7 @@ function Offers() {
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal className="flex flex-col items-start justify-between gap-6 md:flex-row md:items-end">
           <div className="max-w-2xl">
-            <SectionLabel index="03">Modelos de oferta</SectionLabel>
+            <SectionLabel index="04">Modelos de oferta</SectionLabel>
             <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
               Três formatos para começar onde faz sentido.
             </h2>
@@ -572,8 +550,8 @@ function Offers() {
                 <span
                   className={
                     o.featured
-                      ? "inline-flex w-fit items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-feature-foreground"
-                      : "inline-block w-fit rounded-full bg-accent/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent"
+                      ? "spec-label inline-flex w-fit items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-feature-foreground"
+                      : "spec-label inline-block w-fit rounded-full bg-accent/10 px-3 py-1 text-accent"
                   }
                 >
                   {o.featured && <span className="h-1.5 w-1.5 rounded-full bg-feature-accent" />}
@@ -666,7 +644,7 @@ function Differentials() {
     <section id="diferenciais" className="py-24 md:py-32">
       <div className="mx-auto w-full max-w-6xl px-6">
         <Reveal className="max-w-2xl">
-          <SectionLabel index="04">Diferenciais</SectionLabel>
+          <SectionLabel index="05">Diferenciais</SectionLabel>
           <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
             Não é mais um curso genérico de prompts.
           </h2>
@@ -728,7 +706,7 @@ function Governance() {
       />
       <div className="mx-auto grid w-full max-w-6xl gap-x-16 gap-y-12 px-6 md:grid-cols-12">
         <Reveal className="md:col-span-5">
-          <SectionLabel index="05" tone="feature">
+          <SectionLabel index="06" tone="feature">
             Governança e segurança
           </SectionLabel>
           <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-4xl">
@@ -762,7 +740,7 @@ function CTA() {
   return (
     <section id="contato" className="py-24 md:py-32">
       <Reveal className="mx-auto w-full max-w-4xl px-6 text-center">
-        <SectionLabel index="06" className="justify-center">
+        <SectionLabel index="07" className="justify-center">
           Próximo passo
         </SectionLabel>
         <h2 className="mt-5 font-display text-3xl font-semibold leading-tight tracking-tight md:text-5xl">
@@ -806,9 +784,9 @@ function Footer() {
     <footer className="border-t border-border bg-surface py-12">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-start justify-between gap-6 px-6 text-sm text-muted-foreground md:flex-row md:items-center">
         <div className="flex items-center text-foreground">
-          <BrandLogo />
+          <BrandLogo size="lg" />
         </div>
-        <p>© {new Date().getFullYear()} · Treinamento de IA aplicada para empresas.</p>
+        <p>© {new Date().getFullYear()} AI OPS · Treinamento de IA aplicada para empresas.</p>
       </div>
     </footer>
   );
