@@ -14,7 +14,6 @@ import {
   Menu,
 } from "lucide-react";
 import { motion, MotionConfig } from "motion/react";
-import heroImage from "@/assets/hero.jpg";
 import { Reveal, Stagger, Item } from "@/components/reveal";
 import { SectionLabel } from "@/components/section-label";
 import { FloatingPaths } from "@/components/ui/background-paths";
@@ -210,30 +209,22 @@ function Hero() {
   return (
     <section id="top" className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <motion.img
-          src={heroImage}
-          alt=""
-          width={1920}
-          height={1080}
-          className="h-full w-full object-cover opacity-95"
-          initial={{ scale: 1.08, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.95 }}
-          transition={{ duration: 1.6, ease }}
-        />
+        {/* Soft brand glow for depth on the solid background (the hero photo was
+            removed — the flowing paths are now the hero's texture). */}
         <div
+          aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, color-mix(in oklab, var(--background) 55%, transparent) 0%, color-mix(in oklab, var(--background) 85%, transparent) 70%, var(--background) 100%)",
+              "radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, var(--highlight) 12%, transparent), transparent 60%)",
           }}
         />
-        {/* Animated flowing contour lines — the hero's signature motion texture
-            (replaces the former static grid to avoid a double-texture clash with
-            the photo). Edge-masked + toned down, tinted white to match the hero
-            copy. <FloatingPaths> honours prefers-reduced-motion (static lines). */}
+        {/* Animated flowing contour lines — the hero's signature motion texture.
+            Edge-masked, tinted white. <FloatingPaths> honours
+            prefers-reduced-motion (renders static lines when reduced). */}
         <div
           aria-hidden
-          className="absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_85%_70%_at_50%_25%,black,transparent_80%)]"
+          className="absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_90%_75%_at_50%_30%,black,transparent_82%)]"
         >
           <FloatingPaths position={1} className="text-white" />
           <FloatingPaths position={-1} className="text-white" />
