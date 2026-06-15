@@ -17,6 +17,7 @@ import { motion, MotionConfig } from "motion/react";
 import heroImage from "@/assets/hero.jpg";
 import { Reveal, Stagger, Item } from "@/components/reveal";
 import { SectionLabel } from "@/components/section-label";
+import { FloatingPaths } from "@/components/ui/background-paths";
 import { WhyAiProjectsFail } from "@/components/why-ai-projects-fail";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
@@ -226,16 +227,17 @@ function Hero() {
               "linear-gradient(180deg, color-mix(in oklab, var(--background) 55%, transparent) 0%, color-mix(in oklab, var(--background) 85%, transparent) 70%, var(--background) 100%)",
           }}
         />
-        {/* Engineered grid texture — atmosphere/depth instead of a flat overlay. */}
+        {/* Animated flowing contour lines — the hero's signature motion texture
+            (replaces the former static grid to avoid a double-texture clash with
+            the photo). Edge-masked + toned down, tinted white to match the hero
+            copy. <FloatingPaths> honours prefers-reduced-motion (static lines). */}
         <div
           aria-hidden
-          className="absolute inset-0 opacity-[0.18] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,black,transparent_75%)]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, oklch(1 0 0 / 0.5) 1px, transparent 1px), linear-gradient(to bottom, oklch(1 0 0 / 0.5) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
-          }}
-        />
+          className="absolute inset-0 opacity-50 [mask-image:radial-gradient(ellipse_85%_70%_at_50%_25%,black,transparent_80%)]"
+        >
+          <FloatingPaths position={1} className="text-white" />
+          <FloatingPaths position={-1} className="text-white" />
+        </div>
         <motion.div
           aria-hidden
           className="absolute inset-x-0 top-0 h-px"
