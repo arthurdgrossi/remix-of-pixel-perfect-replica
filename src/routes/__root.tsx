@@ -84,7 +84,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "A AI OPS capacita equipes corporativas para usar Inteligência Artificial de forma prática, segura e orientada a resultados.",
       },
       { name: "author", content: "AI OPS" },
-      { name: "theme-color", content: "#0f1b3d" },
+      { name: "theme-color", content: "#071d1b" },
       { property: "og:site_name", content: "AI OPS" },
       { property: "og:title", content: "AI OPS — Treinamento de IA aplicada para empresas" },
       {

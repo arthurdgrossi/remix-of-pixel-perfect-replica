@@ -223,7 +223,7 @@ function Hero() {
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, oklch(0.18 0.06 265 / 0.55) 0%, oklch(0.18 0.06 265 / 0.85) 70%, var(--background) 100%)",
+              "linear-gradient(180deg, color-mix(in oklab, var(--background) 55%, transparent) 0%, color-mix(in oklab, var(--background) 85%, transparent) 70%, var(--background) 100%)",
           }}
         />
         {/* Engineered grid texture — atmosphere/depth instead of a flat overlay. */}
