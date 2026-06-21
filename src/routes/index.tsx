@@ -14,9 +14,9 @@ import {
   Menu,
 } from "lucide-react";
 import { motion, MotionConfig } from "motion/react";
-import heroImage from "@/assets/hero.jpg";
 import { Reveal, Stagger, Item } from "@/components/reveal";
 import { SectionLabel } from "@/components/section-label";
+import { FloatingPaths } from "@/components/ui/background-paths";
 import { WhyAiProjectsFail } from "@/components/why-ai-projects-fail";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
@@ -154,7 +154,7 @@ function Nav() {
           <ThemeToggle />
           <a
             href="#contato"
-            className={`hidden h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 sm:inline-flex ${focusRing}`}
+            className={`hidden h-9 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover sm:inline-flex ${focusRing}`}
           >
             Falar com a gente
           </a>
@@ -188,7 +188,7 @@ function Nav() {
                 <a
                   href="#contato"
                   onClick={() => setOpen(false)}
-                  className={`mt-4 inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 ${focusRing}`}
+                  className={`mt-4 inline-flex h-11 items-center justify-center rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover ${focusRing}`}
                 >
                   Falar com a gente
                 </a>
@@ -209,33 +209,26 @@ function Hero() {
   return (
     <section id="top" className="relative isolate overflow-hidden">
       <div className="absolute inset-0 -z-10">
-        <motion.img
-          src={heroImage}
-          alt=""
-          width={1920}
-          height={1080}
-          className="h-full w-full object-cover opacity-95"
-          initial={{ scale: 1.08, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.95 }}
-          transition={{ duration: 1.6, ease }}
-        />
+        {/* Soft brand glow for depth on the solid background (the hero photo was
+            removed — the flowing paths are now the hero's texture). */}
         <div
+          aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(180deg, oklch(0.18 0.06 265 / 0.55) 0%, oklch(0.18 0.06 265 / 0.85) 70%, var(--background) 100%)",
+              "radial-gradient(ellipse 90% 60% at 50% -10%, color-mix(in oklab, var(--highlight) 12%, transparent), transparent 60%)",
           }}
         />
-        {/* Engineered grid texture — atmosphere/depth instead of a flat overlay. */}
+        {/* Animated flowing contour lines — the hero's signature motion texture.
+            Edge-masked, tinted white. <FloatingPaths> honours
+            prefers-reduced-motion (renders static lines when reduced). */}
         <div
           aria-hidden
-          className="absolute inset-0 opacity-[0.18] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,black,transparent_75%)]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, oklch(1 0 0 / 0.5) 1px, transparent 1px), linear-gradient(to bottom, oklch(1 0 0 / 0.5) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
-          }}
-        />
+          className="absolute inset-0 opacity-60 [mask-image:radial-gradient(ellipse_90%_75%_at_50%_30%,black,transparent_82%)]"
+        >
+          <FloatingPaths position={1} className="text-white" />
+          <FloatingPaths position={-1} className="text-white" />
+        </div>
         <motion.div
           aria-hidden
           className="absolute inset-x-0 top-0 h-px"
@@ -298,7 +291,7 @@ function Hero() {
         >
           <motion.a
             href="#contato"
-            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-white px-6 text-sm font-medium text-feature shadow-[var(--shadow-elegant)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
+            className="group inline-flex h-11 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-transparent"
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
@@ -543,7 +536,7 @@ function Offers() {
                 transition={{ type: "spring", stiffness: 300, damping: 24 }}
                 className={
                   o.featured
-                    ? "relative flex h-full flex-col rounded-xl bg-feature p-8 text-feature-foreground shadow-[var(--shadow-elegant)] ring-1 ring-feature-border md:-mt-4"
+                    ? "relative flex h-full flex-col rounded-xl bg-feature p-8 text-feature-foreground shadow-[var(--shadow-elegant)] ring-1 ring-primary/30 md:-mt-4"
                     : "relative flex h-full flex-col rounded-xl border border-border bg-card p-8 shadow-[var(--shadow-card)]"
                 }
               >
@@ -588,7 +581,7 @@ function Offers() {
                   whileTap={{ scale: 0.97 }}
                   className={
                     o.featured
-                      ? "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-white px-4 text-sm font-medium text-feature transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-feature"
+                      ? "group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md bg-primary px-4 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-feature"
                       : `group/btn mt-8 inline-flex h-10 items-center justify-center gap-2 rounded-md border border-border bg-background px-4 text-sm font-medium text-foreground transition-colors hover:border-accent hover:text-accent ${focusRing}`
                   }
                 >
@@ -756,7 +749,7 @@ function CTA() {
             whileHover={{ y: -2 }}
             whileTap={{ scale: 0.97 }}
             transition={{ type: "spring", stiffness: 400, damping: 22 }}
-            className={`group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] ${focusRing}`}
+            className={`group inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary px-7 text-sm font-medium text-primary-foreground shadow-[var(--shadow-elegant)] transition-colors hover:bg-primary-hover ${focusRing}`}
           >
             <Mail className="h-4 w-4" />
             Solicitar diagnóstico

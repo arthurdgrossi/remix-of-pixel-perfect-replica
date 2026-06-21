@@ -9,8 +9,20 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DottedSurfaceDemoRouteImport } from './routes/dotted-surface-demo'
+import { Route as BackgroundPathsDemoRouteImport } from './routes/background-paths-demo'
 import { Route as IndexRouteImport } from './routes/index'
 
+const DottedSurfaceDemoRoute = DottedSurfaceDemoRouteImport.update({
+  id: '/dotted-surface-demo',
+  path: '/dotted-surface-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BackgroundPathsDemoRoute = BackgroundPathsDemoRouteImport.update({
+  id: '/background-paths-demo',
+  path: '/background-paths-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +31,50 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/background-paths-demo': typeof BackgroundPathsDemoRoute
+  '/dotted-surface-demo': typeof DottedSurfaceDemoRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/background-paths-demo': typeof BackgroundPathsDemoRoute
+  '/dotted-surface-demo': typeof DottedSurfaceDemoRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/background-paths-demo': typeof BackgroundPathsDemoRoute
+  '/dotted-surface-demo': typeof DottedSurfaceDemoRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/background-paths-demo' | '/dotted-surface-demo'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/background-paths-demo' | '/dotted-surface-demo'
+  id: '__root__' | '/' | '/background-paths-demo' | '/dotted-surface-demo'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BackgroundPathsDemoRoute: typeof BackgroundPathsDemoRoute
+  DottedSurfaceDemoRoute: typeof DottedSurfaceDemoRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/dotted-surface-demo': {
+      id: '/dotted-surface-demo'
+      path: '/dotted-surface-demo'
+      fullPath: '/dotted-surface-demo'
+      preLoaderRoute: typeof DottedSurfaceDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/background-paths-demo': {
+      id: '/background-paths-demo'
+      path: '/background-paths-demo'
+      fullPath: '/background-paths-demo'
+      preLoaderRoute: typeof BackgroundPathsDemoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +87,8 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BackgroundPathsDemoRoute: BackgroundPathsDemoRoute,
+  DottedSurfaceDemoRoute: DottedSurfaceDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

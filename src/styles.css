@@ -31,6 +31,7 @@
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-secondary: var(--secondary);
@@ -55,83 +56,101 @@
 :root {
   --radius: 0.5rem;
 
-  /* Navy Trust palette */
-  --background: oklch(0.985 0.005 250);
-  --foreground: oklch(0.18 0.06 265);
+  /* "Deep Forest" palette — corporate deep-teal + a single lime signal.
+     Dark is the brand identity (anchored to the exact spec hexes); the light
+     theme harmonizes the same teal/lime hue family on a warm off-white. */
+  --background: oklch(0.985 0.008 160);
+  --foreground: oklch(0.23 0.03 178);
 
-  --surface: oklch(0.96 0.012 250);
-  --surface-foreground: oklch(0.20 0.06 265);
+  --surface: oklch(0.96 0.013 165);
+  --surface-foreground: oklch(0.24 0.03 178);
 
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.18 0.06 265);
+  --card-foreground: oklch(0.23 0.03 178);
 
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0.06 265);
+  --popover-foreground: oklch(0.23 0.03 178);
 
-  --primary: oklch(0.22 0.08 265);             /* deep navy #0f1b3d */
-  --primary-foreground: oklch(0.97 0.01 250);
+  --primary: oklch(0.86 0.14 116);             /* lime #D5E370 */
+  --primary-foreground: oklch(0.24 0.05 150);  /* deep ink for text on lime */
+  --primary-hover: oklch(0.90 0.10 116);       /* #E2ECA1 */
 
-  --accent: oklch(0.55 0.13 245);              /* steel blue #3b6fa0 */
-  --accent-foreground: oklch(0.99 0.005 250);
+  --accent: oklch(0.47 0.085 182);             /* deep teal — text/icons on light */
+  --accent-foreground: oklch(0.985 0.008 160);
 
-  --highlight: oklch(0.78 0.13 240);           /* bright sky-blue — headline accent / checks */
+  --highlight: oklch(0.52 0.14 142);           /* deep lime-green headline pop on light */
 
-  /* Stable "ink" feature surface — always deep navy in BOTH themes, so emphasis
-     panels meant to read white-on-navy (Governance band, featured plan, hero CTA
-     label) do NOT invert when --primary flips to near-white in dark mode. */
-  --feature: oklch(0.21 0.07 265);
-  --feature-foreground: oklch(0.98 0.008 250);
-  --feature-muted: oklch(0.80 0.03 255);       /* readable secondary text on the band */
+  /* Stable "ink" feature surface — stays deep teal in BOTH themes, so emphasis
+     panels (Governance band, featured plan) read light-on-teal without
+     inverting when --primary flips to lime. */
+  --feature: oklch(0.205 0.03 178);
+  --feature-foreground: oklch(0.985 0.008 160);
+  --feature-muted: oklch(0.80 0.022 168);      /* readable secondary text on the band */
   --feature-border: oklch(1 0 0 / 12%);
-  --feature-accent: oklch(0.80 0.12 240);      /* checks / index numbers on the band */
+  --feature-accent: oklch(0.86 0.14 116);      /* lime checks / index numbers on the band */
 
-  --secondary: oklch(0.36 0.09 255);           /* mid navy #1e3a5f */
-  --secondary-foreground: oklch(0.97 0.01 250);
+  --secondary: oklch(0.35 0.05 176);
+  --secondary-foreground: oklch(0.985 0.008 160);
 
-  --muted: oklch(0.94 0.01 250);
-  --muted-foreground: oklch(0.45 0.04 255);
+  --muted: oklch(0.95 0.013 165);
+  --muted-foreground: oklch(0.46 0.03 178);
 
-  --destructive: oklch(0.58 0.22 27);
-  --destructive-foreground: oklch(0.98 0.005 250);
+  --destructive: oklch(0.58 0.20 27);
+  --destructive-foreground: oklch(0.985 0.005 160);
 
-  --border: oklch(0.88 0.015 250);
-  --input: oklch(0.90 0.015 250);
-  --ring: oklch(0.55 0.13 245);
+  --border: oklch(0.88 0.018 165);
+  --input: oklch(0.90 0.018 165);
+  --ring: oklch(0.62 0.13 130);
 
-  --gradient-hero: linear-gradient(135deg, oklch(0.22 0.08 265) 0%, oklch(0.30 0.10 260) 60%, oklch(0.40 0.12 250) 100%);
-  --gradient-accent: linear-gradient(135deg, oklch(0.55 0.13 245), oklch(0.45 0.11 255));
-  --shadow-elegant: 0 20px 60px -20px oklch(0.22 0.08 265 / 0.25);
-  --shadow-card: 0 1px 2px oklch(0.22 0.08 265 / 0.06), 0 8px 24px -12px oklch(0.22 0.08 265 / 0.12);
+  --gradient-hero: linear-gradient(135deg, oklch(0.20 0.03 178) 0%, oklch(0.26 0.04 175) 60%, oklch(0.34 0.05 165) 100%);
+  --gradient-accent: linear-gradient(135deg, oklch(0.47 0.085 182), oklch(0.40 0.075 188));
+  --shadow-elegant: 0 20px 60px -20px oklch(0.20 0.03 178 / 0.30);
+  --shadow-card: 0 1px 2px oklch(0.20 0.03 178 / 0.06), 0 8px 24px -12px oklch(0.20 0.03 178 / 0.12);
 }
 
 .dark {
-  --background: oklch(0.18 0.06 265);
-  --foreground: oklch(0.97 0.01 250);
-  --surface: oklch(0.22 0.07 265);
-  --surface-foreground: oklch(0.97 0.01 250);
-  --card: oklch(0.22 0.07 265);
-  --card-foreground: oklch(0.97 0.01 250);
-  --popover: oklch(0.22 0.07 265);
-  --popover-foreground: oklch(0.97 0.01 250);
-  --primary: oklch(0.97 0.01 250);
-  --primary-foreground: oklch(0.18 0.06 265);
-  --accent: oklch(0.65 0.14 240);
-  --accent-foreground: oklch(0.18 0.06 265);
-  --highlight: oklch(0.78 0.13 240);
-  --secondary: oklch(0.30 0.08 260);
-  --secondary-foreground: oklch(0.97 0.01 250);
-  --muted: oklch(0.28 0.06 260);
-  --muted-foreground: oklch(0.745 0.032 250);  /* brighter than stock 0.70 — small body/caption legibility on dark cards */
-  --destructive: oklch(0.65 0.20 22);
-  --destructive-foreground: oklch(0.97 0.01 250);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.65 0.14 240);
+  /* Brand identity — anchored to the exact spec hexes. */
+  --background: #071d1b;
+  --foreground: #f8fcfb;
 
-  /* Lift the always-navy band slightly off the dark background, plus a touch
-     more border so it still reads as an elevated panel in dark mode. */
-  --feature: oklch(0.245 0.07 265);
+  --surface: #0d2824;
+  --surface-foreground: #f8fcfb;
+
+  --card: oklch(0.285 0.028 180);              /* elevated teal panel, clearly above surface */
+  --card-foreground: #f8fcfb;
+
+  --popover: oklch(0.285 0.028 180);
+  --popover-foreground: #f8fcfb;
+
+  --primary: #d5e370;                          /* lime */
+  --primary-foreground: oklch(0.20 0.04 150);  /* deep ink for text on lime */
+  --primary-hover: #e2eca1;
+
+  --accent: oklch(0.82 0.10 172);              /* mint-teal — icons / links / chips */
+  --accent-foreground: oklch(0.18 0.03 178);
+
+  --highlight: #d5e370;                         /* lime pop — headlines / data-viz */
+
+  --secondary: oklch(0.33 0.04 176);
+  --secondary-foreground: #f8fcfb;
+
+  --muted: oklch(0.30 0.03 178);
+  --muted-foreground: oklch(0.78 0.025 168);   /* AA on dark teal (≥4.5:1 on card/surface/bg) */
+
+  --destructive: oklch(0.64 0.18 25);
+  --destructive-foreground: #f8fcfb;
+
+  --border: #2f3e28;
+  --input: oklch(1 0 0 / 13%);
+  --ring: #d5e370;
+
+  /* Lift the always-teal ink band slightly off the dark background so it still
+     reads as an elevated panel in dark mode. */
+  --feature: oklch(0.275 0.032 180);
+  --feature-foreground: #f8fcfb;
+  --feature-muted: oklch(0.82 0.022 168);
   --feature-border: oklch(1 0 0 / 14%);
+  --feature-accent: #d5e370;
 }
 
 @layer base {
